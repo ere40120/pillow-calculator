@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>재단 계산기</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="재단계산기" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f172a; --card: #1e293b; --card2: #0f172a;
+      --border: #334155; --text: #f1f5f9; --muted: #94a3b8;
+      --primary: #818cf8; --primary-dark: #4f46e5;
+      --success: #34d399; --warning: #fbbf24; --danger: #f87171;
+      --radius: 14px;
+    }
+    body { font-family: 'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 48px; }
+
+    /* ── Header ── */
+    header { background: linear-gradient(135deg,#1e1b4b,#312e81); padding: 20px 20px 16px; text-align: center; border-bottom: 1px solid #3730a3; }
+    header h1 { font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    header p  { font-size: 0.75rem; color: #a5b4fc; margin-top: 3px; }
+
+    /* ── Tabs ── */
+    .tab-bar { display: flex; background: #1e293b; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .tab-btn { flex: 1; padding: 12px 8px; font-size: 0.8rem; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; border-bottom: 2.5px solid transparent; transition: all 0.18s; letter-spacing: -0.2px; }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(129,140,248,0.06); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Container ── */
+    .container { max-width: 560px; margin: 0 auto; padding: 14px 14px; }
+
+    /* ── Card ── */
+    .card { background: var(--card); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; border: 1px solid var(--border); }
+    .card-title { font-size: 0.7rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+    /* ── Form ── */
+    .field { margin-bottom: 12px; }
+    .field:last-child { margin-bottom: 0; }
+    label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+    .input-wrap { position: relative; }
+    input[type="number"], input[type="text"] {
+      width: 100%; padding: 10px 38px 10px 12px; background: var(--card2);
+      border: 1.5px solid var(--border); border-radius: 9px; font-size: 0.95rem;
+      color: var(--text); outline: none; transition: border-color 0.18s, box-shadow 0.18s; -webkit-appearance: none;
+    }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(129,140,248,0.15); }
+    input[type="text"] { padding-right: 12px; }
+    .unit { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; color: var(--muted); pointer-events: none; font-weight: 600; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+
+    /* ── Buttons ── */
+    .btn-primary { width: 100%; padding: 12px; background: var(--primary-dark); color: #fff; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.1s; letter-spacing: -0.2px; }
+    .btn-primary:hover { background: #4338ca; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-sm { padding: 8px 14px; background: var(--card2); color: var(--muted); border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .btn-sm:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* ── Color picker ── */
+    .color-picker { display: flex; gap: 7px; flex-wrap: wrap; }
+    .color-dot { width: 26px; height: 26px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.12s; flex-shrink: 0; }
+    .color-dot:hover { transform: scale(1.15); }
+    .color-dot.selected { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+
+    /* ── Chip rows ── */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+    .sz-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px 5px 11px; background: var(--card2); border: 1.5px solid var(--border); border-radius: 20px; font-size: 0.78rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.15s; user-select: none; }
+    .sz-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .sz-chip .del { font-size: 0.65rem; color: var(--border); transition: color 0.12s; }
+    .sz-chip:hover .del { color: var(--danger); }
+
+    /* ── Item list ── */
+    .items-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+    .item-row { display: flex; align-items: center; gap: 10px; background: var(--card2); border: 1px solid var(--border); border-left: 4px solid transparent; border-radius: 10px; padding: 10px 12px; }
+    .item-swatch { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+    .item-info { flex: 1; min-width: 0; }
+    .item-name { font-size: 0.88rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-size { font-size: 0.74rem; color: var(--muted); margin-top: 1px; }
+    .item-cnt { background: rgba(129,140,248,0.14); color: var(--primary); font-size: 0.74rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; flex-shrink: 0; }
+    .item-del { width: 22px; height: 22px; border-radius: 50%; background: var(--border); border: none; color: var(--muted); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.12s, color 0.12s; }
+    .item-del:hover { background: var(--danger); color: #fff; }
+
+    /* ── Presets ── */
+    .preset-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .preset-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px 5px 12px; background: var(--card2); border: 1.5px solid var(--border); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+    .preset-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .preset-chip .p-del { font-size: 0.65rem; color: var(--border); transition: color 0.12s; }
+    .preset-chip:hover .p-del { color: var(--danger); }
+    .save-row { display: flex; gap: 8px; margin-top: 12px; }
+    .save-row input { flex: 1; padding-right: 12px; }
+
+    /* ── Divider / hint / empty ── */
+    .divider { height: 1px; background: var(--border); margin: 14px 0; }
+    .hint { font-size: 0.73rem; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+    .empty { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 20px 0; }
+
+    /* ── Checkbox ── */
+    .check-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .check-row input[type="checkbox"] { width: auto; accent-color: var(--primary); cursor: pointer; }
+    .check-row label { margin-bottom: 0; font-size: 0.8rem; cursor: pointer; }
+
+    /* ── Canvas ── */
+    #viz-canvas { width: 100%; display: block; border-radius: 10px; background: #0d1117; border: 1px solid var(--border); }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .leg-item { display: flex; align-items: center; gap: 5px; font-size: 0.74rem; color: var(--muted); }
+    .leg-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+    .stats-row { display: flex; gap: 8px; margin-top: 10px; }
+    .stat { flex: 1; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 8px; text-align: center; }
+    .stat-val { font-size: 1.3rem; font-weight: 800; line-height: 1; }
+    .stat-lbl { font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+    .sv-green { color: var(--success); }
+    .sv-yellow { color: var(--warning); }
+    .sv-red { color: var(--danger); }
+    .sv-blue { color: var(--primary); }
+
+    /* ══════════════════════════════════════════
+       분석 탭 스타일
+    ══════════════════════════════════════════ */
+    .analysis-card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); border-left: 4px solid var(--border); }
+    .a-section { margin-bottom: 14px; }
+    .a-label { font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .a-sublabel { font-size: 0.72rem; color: var(--primary); font-weight: 600; margin-bottom: 5px; margin-top: 8px; }
+    .mult-row { display: flex; flex-wrap: wrap; gap: 4px; max-height: 80px; overflow-y: auto; padding-right: 4px; }
+    .mult-chip { padding: 3px 7px; background: var(--card2); border: 1px solid var(--border); border-radius: 6px; font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+    .mult-chip.near { border-color: var(--warning); color: var(--warning); }
+    .mult-chip.exact { border-color: var(--success); color: var(--success); background: rgba(52,211,153,0.1); }
+
+    /* 폭 배치 테이블 */
+    .combo-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    .combo-table th { text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; font-size: 0.7rem; border-bottom: 1px solid var(--border); }
+    .combo-table td { padding: 7px 8px; border-bottom: 1px solid rgba(51,65,85,0.5); color: var(--text); }
+    .combo-table tr:last-child td { border-bottom: none; }
+    .combo-table tr.best-row td { background: rgba(52,211,153,0.07); }
+    .combo-table tr.best-row td:first-child { border-left: 3px solid var(--success); padding-left: 5px; }
+    .td-waste-good { color: var(--success); font-weight: 700; }
+    .td-waste-ok { color: var(--warning); }
+    .td-qty { font-weight: 700; color: var(--primary); }
+
+    /* ══════════════════════════════════════════
+       요척 탭 스타일
+    ══════════════════════════════════════════ */
+    .yossuk-card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); border-left: 4px solid var(--border); }
+    .yossuk-best { background: rgba(129,140,248,0.08); border: 1px solid rgba(129,140,248,0.2); border-radius: 9px; padding: 10px 12px; margin-bottom: 12px; }
+    .yb-label { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .yb-config { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+    .yb-config strong { color: var(--primary); }
+
+    /* 판수 그리드 */
+    .pan-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .pan-item { background: var(--card2); border: 1px solid var(--border); border-radius: 9px; padding: 10px 8px; text-align: center; }
+    .pan-val { font-size: 1.4rem; font-weight: 800; line-height: 1; }
+    .pan-lbl { font-size: 0.65rem; color: var(--muted); margin-top: 3px; }
+    .pan-sub { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+
+    /* 난단 정보 */
+    .nan-dan { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.25); border-radius: 9px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.8rem; line-height: 1.6; color: var(--text); }
+    .nan-dan strong { color: var(--warning); }
+
+    /* 필요 원단 */
+    .min-fabric { background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.25); border-radius: 9px; padding: 10px 12px; }
+    .mf-val { font-size: 1.6rem; font-weight: 800; color: var(--success); display: block; }
+    .mf-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+
+    /* 비교표 */
+    .orient-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .oc-item { background: var(--card2); border: 1px solid var(--border); border-radius: 9px; padding: 10px; }
+    .oc-item.best { border-color: var(--success); background: rgba(52,211,153,0.06); }
+    .oc-title { font-size: 0.7rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .oc-title .best-badge { font-size: 0.62rem; background: var(--success); color: #000; padding: 1px 5px; border-radius: 4px; font-weight: 800; }
+    .oc-row { display: flex; justify-content: space-between; font-size: 0.76rem; padding: 2px 0; }
+    .oc-key { color: var(--muted); }
+    .oc-val { font-weight: 700; }
+
+    /* footer */
+    footer { text-align: center; color: var(--muted); font-size: 0.72rem; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>✂️ 재단 계산기</h1>
+  <p>사각형 재단 레이아웃 최적화</p>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="settings" onclick="showTab('settings')">⚙️ 설정</button>
+  <button class="tab-btn" data-tab="analysis" onclick="showTab('analysis')">📐 사이즈 분석</button>
+  <button class="tab-btn" data-tab="yossuk" onclick="showTab('yossuk')">📊 최적 요척</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 1: 설정
+══════════════════════════════════════════ -->
+<div id="tab-settings" class="tab-pane active">
+<div class="container">
+
+  <!-- 원단 설정 -->
+  <div class="card">
+    <div class="card-title">🧵 원단 설정</div>
+
+    <!-- 저장된 원단 프리셋 -->
+    <div id="fabric-preset-area" style="display:none">
+      <div style="font-size:0.72rem;color:var(--muted);font-weight:700;margin-bottom:7px;">저장된 원단 — 탭하여 불러오기</div>
+      <div class="chip-row" id="fabric-preset-chips"></div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="field">
+        <label>원단 폭</label>
+        <div class="input-wrap">
+          <input type="number" id="fabric-w" value="162" min="1" step="1">
+          <span class="unit">cm</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>작업판 길이</label>
+        <div class="input-wrap">
+          <input type="number" id="fabric-len" value="800" min="1" step="10">
+          <span class="unit">cm</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>칼밥</label>
+        <div class="input-wrap">
+          <input type="number" id="kalbab" value="3" min="0" step="0.5">
+          <span class="unit">cm</span>
+        </div>
+      </div>
+    </div>
+    <div class="hint">💡 칼밥: 원단 끝 수평을 맞추기 위해 나라시 후 잘라내는 여유분</div>
+    <div class="save-row" style="margin-top:12px;">
+      <input type="text" id="fabric-preset-name" placeholder="원단 설정 이름 (예: 광폭162)">
+      <button class="btn-sm" onclick="saveFabricPreset()">저장</button>
+    </div>
+  </div>
+
+  <!-- 재단 사이즈 추가 -->
+  <div class="card">
+    <div class="card-title">✂️ 재단 사이즈</div>
+
+    <div id="saved-sz-area" style="display:none">
+      <div style="font-size:0.72rem;color:var(--muted);font-weight:700;margin-bottom:7px;">저장된 사이즈 — 탭하여 폼에 불러오기</div>
+      <div class="chip-row" id="saved-sz-chips"></div>
+      <div class="divider"></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>이름</label>
+        <input type="text" id="item-name" placeholder="예: 앞판">
+      </div>
+      <div class="field">
+        <label>수량</label>
+        <div class="input-wrap">
+          <input type="number" id="item-cnt" value="1" min="1" step="1">
+          <span class="unit">장</span>
+        </div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label>가로 (W)</label>
+        <div class="input-wrap">
+          <input type="number" id="item-w" placeholder="0" min="1">
+          <span class="unit">cm</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>세로 (H)</label>
+        <div class="input-wrap">
+          <input type="number" id="item-h" placeholder="0" min="1">
+          <span class="unit">cm</span>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>색상</label>
+      <div class="color-picker" id="color-picker"></div>
+    </div>
+    <div class="check-row">
+      <input type="checkbox" id="do-save-sz">
+      <label for="do-save-sz">이 사이즈를 저장목록에 추가</label>
+    </div>
+    <button class="btn-primary" onclick="addItem()">+ 재단 추가</button>
+    <div class="items-list" id="items-list"></div>
+  </div>
+
+  <!-- 세트 저장 -->
+  <div class="card">
+    <div class="card-title">💾 세트 저장 · 불러오기</div>
+    <div class="preset-row" id="preset-row">
+      <div class="empty">저장된 세트가 없습니다</div>
+    </div>
+    <div class="save-row">
+      <input type="text" id="preset-name-inp" placeholder="세트 이름 입력 후 저장">
+      <button class="btn-sm" onclick="savePreset()">저장</button>
+    </div>
+  </div>
+
+  <footer>재단 계산기 v2.1</footer>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 2: 사이즈 분석
+══════════════════════════════════════════ -->
+<div id="tab-analysis" class="tab-pane">
+<div class="container">
+  <div id="analysis-content">
+    <div class="empty">⚙️ 설정 탭에서 원단과 재단 사이즈를 먼저 입력해주세요.</div>
+  </div>
+  <footer>재단 계산기 v2.1</footer>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 3: 최적 요척
+══════════════════════════════════════════ -->
+<div id="tab-yossuk" class="tab-pane">
+<div class="container">
+  <div id="yossuk-content"></div>
+
+  <!-- 캔버스 시각화 -->
+  <div class="card">
+    <div class="card-title">🖼️ 재단판 시각화</div>
+    <canvas id="viz-canvas"></canvas>
+    <div class="legend" id="legend"></div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val sv-green" id="s-fit">0</div><div class="stat-lbl">재단 가능</div></div>
+      <div class="stat"><div class="stat-val sv-red"   id="s-over">0</div><div class="stat-lbl">초과</div></div>
+      <div class="stat"><div class="stat-val sv-blue"  id="s-util">0%</div><div class="stat-lbl">활용률</div></div>
+    </div>
+  </div>
+
+  <footer>재단 계산기 v2.1</footer>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     JavaScript
+══════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────────────────
+   상수
+───────────────────────────────────────── */
+const COLORS = ['#ef4444','#3b82f6','#eab308','#22c55e','#f97316','#a855f7','#ec4899','#06b6d4','#f43f5e','#84cc16'];
+const LS_SIZES         = 'jaedanSizes';
+const LS_PRESETS       = 'jaedanPresets';
+const LS_FABRIC        = 'jaedanFabric';
+const LS_FABRIC_PRESET = 'jaedanFabricPresets';
+
+/* ─────────────────────────────────────────
+   상태
+───────────────────────────────────────── */
+let items    = [];
+let nextId   = 1;
+let selColor = COLORS[0];
+
+/* ─────────────────────────────────────────
+   초기화
+───────────────────────────────────────── */
+function init() {
+  // 컬러 피커
+  const cp = $id('color-picker');
+  COLORS.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'color-dot' + (c === selColor ? ' selected' : '');
+    d.style.background = c;
+    d.dataset.color = c;
+    d.onclick = () => setColor(c);
+    cp.appendChild(d);
+  });
+
+  // 저장된 원단 설정 불러오기
+  const f = loadJSON(LS_FABRIC);
+  if (f) { setVal('fabric-w', f.w); setVal('fabric-len', f.l); setVal('kalbab', f.k); }
+
+  // 입력 이벤트
+  ['fabric-w','fabric-len','kalbab'].forEach(id =>
+    $id(id).addEventListener('input', () => { persistFabric(); })
+  );
+
+  renderFabricPresets();
+  renderSavedSizes();
+  renderPresets();
+  renderItems();
+}
+
+/* ─────────────────────────────────────────
+   탭 전환
+───────────────────────────────────────── */
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  $id('tab-' + name).classList.add('active');
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+  if (name === 'analysis') renderAnalysis();
+  if (name === 'yossuk')   { renderYossuk(); redraw(); }
+}
+
+/* ─────────────────────────────────────────
+   색상 선택
+───────────────────────────────────────── */
+function setColor(c) {
+  selColor = c;
+  document.querySelectorAll('.color-dot').forEach(d =>
+    d.classList.toggle('selected', d.dataset.color === c)
+  );
+}
+
+/* ─────────────────────────────────────────
+   원단 설정
+───────────────────────────────────────── */
+function getFabric() {
+  return {
+    w: parseFloat($id('fabric-w').value)   || 162,
+    l: parseFloat($id('fabric-len').value) || 800,
+    k: parseFloat($id('kalbab').value)     || 0
+  };
+}
+function persistFabric() { saveJSON(LS_FABRIC, getFabric()); }
+
+function saveFabricPreset() {
+  const name = $id('fabric-preset-name').value.trim();
+  if (!name) { alert('원단 설정 이름을 입력해주세요.'); return; }
+  const list = loadJSON(LS_FABRIC_PRESET) || [];
+  const f = getFabric();
+  list.push({ name, w: f.w, l: f.l, k: f.k });
+  saveJSON(LS_FABRIC_PRESET, list);
+  $id('fabric-preset-name').value = '';
+  renderFabricPresets();
+}
+
+function loadFabricPreset(i) {
+  const list = loadJSON(LS_FABRIC_PRESET) || [];
+  const p = list[i];
+  if (!p) return;
+  setVal('fabric-w', p.w); setVal('fabric-len', p.l); setVal('kalbab', p.k);
+  persistFabric();
+}
+
+function deleteFabricPreset(i) {
+  const list = loadJSON(LS_FABRIC_PRESET) || [];
+  list.splice(i, 1);
+  saveJSON(LS_FABRIC_PRESET, list);
+  renderFabricPresets();
+}
+
+function renderFabricPresets() {
+  const list = loadJSON(LS_FABRIC_PRESET) || [];
+  const area = $id('fabric-preset-area');
+  const chips = $id('fabric-preset-chips');
+  if (!list.length) { area.style.display = 'none'; return; }
+  area.style.display = 'block';
+  chips.innerHTML = list.map((p, i) => `
+    <div class="sz-chip">
+      <span onclick="loadFabricPreset(${i})">${esc(p.name)} (${p.w}×${p.l})</span>
+      <span class="del" onclick="deleteFabricPreset(${i})">✕</span>
+    </div>
+  `).join('');
+}
+
+/* ─────────────────────────────────────────
+   아이템 추가 / 삭제
+───────────────────────────────────────── */
+function addItem() {
+  const name  = $id('item-name').value.trim() || `조각${nextId}`;
+  const w     = parseFloat($id('item-w').value);
+  const h     = parseFloat($id('item-h').value);
+  const count = Math.max(1, parseInt($id('item-cnt').value) || 1);
+  if (!w || !h || w <= 0 || h <= 0) { alert('가로/세로 사이즈를 입력해주세요.'); return; }
+
+  if ($id('do-save-sz').checked) addSavedSize(name, w, h);
+
+  const usedColors = items.map(i => i.color);
+  let color = selColor;
+  if (usedColors.includes(color)) {
+    const next = COLORS.find(c => !usedColors.includes(c));
+    if (next) { color = next; setColor(next); }
+  }
+
+  items.push({ id: nextId++, name, width: w, height: h, count, color });
+  $id('item-name').value = ''; $id('item-w').value = ''; $id('item-h').value = ''; $id('item-cnt').value = 1; $id('do-save-sz').checked = false;
+  renderItems();
+}
+
+function deleteItem(id) { items = items.filter(i => i.id !== id); renderItems(); }
+
+function renderItems() {
+  const el = $id('items-list');
+  if (!items.length) { el.innerHTML = '<div class="empty">재단 사이즈를 추가해주세요</div>'; return; }
+  el.innerHTML = items.map(it => `
+    <div class="item-row" style="border-left-color:${it.color}">
+      <div class="item-swatch" style="background:${it.color}"></div>
+      <div class="item-info">
+        <div class="item-name">${esc(it.name)}</div>
+        <div class="item-size">${it.width} × ${it.height} cm</div>
+      </div>
+      <div class="item-cnt">×${it.count}장</div>
+      <button class="item-del" onclick="deleteItem(${it.id})">✕</button>
+    </div>
+  `).join('');
+}
+
+/* ─────────────────────────────────────────
+   저장된 사이즈
+───────────────────────────────────────── */
+function getSavedSizes() { return loadJSON(LS_SIZES) || []; }
+function addSavedSize(name, w, h) {
+  const list = getSavedSizes();
+  if (!list.find(s => s.w === w && s.h === h)) { list.push({ name, w, h }); saveJSON(LS_SIZES, list); renderSavedSizes(); }
+}
+function deleteSavedSize(i) { const list = getSavedSizes(); list.splice(i, 1); saveJSON(LS_SIZES, list); renderSavedSizes(); }
+function loadSavedSize(i) {
+  const sz = getSavedSizes()[i]; if (!sz) return;
+  $id('item-name').value = sz.name; $id('item-w').value = sz.w; $id('item-h').value = sz.h; $id('item-cnt').value = 1;
+}
+function renderSavedSizes() {
+  const list = getSavedSizes();
+  const area = $id('saved-sz-area'), row = $id('saved-sz-chips');
+  if (!list.length) { area.style.display = 'none'; return; }
+  area.style.display = 'block';
+  row.innerHTML = list.map((sz, i) => `
+    <div class="sz-chip">
+      <span onclick="loadSavedSize(${i})">${esc(sz.name)} (${sz.w}×${sz.h})</span>
+      <span class="del" onclick="deleteSavedSize(${i})">✕</span>
+    </div>
+  `).join('');
+}
+
+/* ─────────────────────────────────────────
+   세트 저장
+───────────────────────────────────────── */
+function getPresets() { return loadJSON(LS_PRESETS) || []; }
+function savePreset() {
+  const name = $id('preset-name-inp').value.trim();
+  if (!name) { alert('세트 이름을 입력해주세요.'); return; }
+  if (!items.length) { alert('재단 사이즈를 먼저 추가해주세요.'); return; }
+  const list = getPresets();
+  list.push({ name, items: JSON.parse(JSON.stringify(items)), fabric: getFabric() });
+  saveJSON(LS_PRESETS, list);
+  $id('preset-name-inp').value = '';
+  renderPresets();
+}
+function loadPreset(i) {
+  const p = getPresets()[i]; if (!p) return;
+  items = p.items.map(it => ({ ...it }));
+  nextId = Math.max(0, ...items.map(it => it.id)) + 1;
+  if (p.fabric) { setVal('fabric-w', p.fabric.w); setVal('fabric-len', p.fabric.l); setVal('kalbab', p.fabric.k); persistFabric(); }
+  renderItems(); renderPresets();
+}
+function deletePreset(i) { const list = getPresets(); list.splice(i, 1); saveJSON(LS_PRESETS, list); renderPresets(); }
+function renderPresets() {
+  const list = getPresets();
+  const row = $id('preset-row');
+  if (!list.length) { row.innerHTML = '<div class="empty">저장된 세트가 없습니다</div>'; return; }
+  row.innerHTML = list.map((p, i) => `
+    <div class="preset-chip">
+      <span onclick="loadPreset(${i})">${esc(p.name)}</span>
+      <span class="p-del" onclick="deletePreset(${i})">✕</span>
+    </div>
+  `).join('');
+}
+
+/* ─────────────────────────────────────────
+   분석 알고리즘
+───────────────────────────────────────── */
+// 길이 배열: 특정 치수의 배수들
+function getMultiples(dim, maxLen) {
+  const r = [];
+  for (let m = dim; m <= maxLen; m += dim) r.push(m);
+  return r;
+}
+
+// 폭 배치 조합: n*W + m*H <= fabricW 인 모든 조합
+function getWidthCombos(W, H, fabricW) {
+  const combos = [];
+  const maxN = Math.floor(fabricW / W);
+  const maxM = Math.floor(fabricW / H);
+  for (let n = 0; n <= maxN; n++) {
+    for (let m = 0; m <= maxM; m++) {
+      if (!n && !m) continue;
+      const used = n * W + m * H;
+      if (used <= fabricW) {
+        const parts = [];
+        if (n) parts.push(`${n}×${W}`);
+        if (m && H !== W) parts.push(`${m}×${H}`);
+        else if (m && H === W) parts.push(`${m}×${H}`);
+        // 행 높이: n장은 W를 폭으로 쓰므로 높이=H, m장은 H를 폭으로 쓰므로 높이=W
+        const rowH = Math.max(n > 0 ? H : 0, m > 0 ? W : 0);
+        combos.push({ n, m, total: n + m, used, waste: fabricW - used,
+          formula: parts.join(' + ') + ` = ${used}cm`,
+          rowH
+        });
+      }
+    }
+  }
+  // 중복 제거 (W=H인 경우 n*W + m*W = (n+m)*W이 중복될 수 있음)
+  const seen = new Set();
+  return combos.filter(c => {
+    const key = `${c.n}_${c.m}`;
+    if (seen.has(key)) return false;
+    seen.add(key); return true;
+  }).sort((a, b) => b.total - a.total || a.waste - b.waste).slice(0, 10);
+}
+
+// 한 아이템의 전체 분석
+function analyzeItem(item, fabricW, usableLen) {
+  const W = item.width, H = item.height;
+
+  // Option A: W 방향으로 폭 배치, H가 행 높이
+  const A = { label: `${W}cm 폭 기준 (${H}cm 행)`, across: W, rowH: H };
+  A.perRow  = Math.floor(fabricW / W);
+  A.wasteW  = fabricW - A.perRow * W;
+  A.rows    = Math.floor(usableLen / H);
+  A.rem     = usableLen % H;    // 난단 길이
+  A.total   = A.rows * A.perRow;
+
+  // Option B: H 방향으로 폭 배치, W가 행 높이
+  const B = { label: `${H}cm 폭 기준 (${W}cm 행)`, across: H, rowH: W };
+  B.perRow  = Math.floor(fabricW / H);
+  B.wasteW  = fabricW - B.perRow * H;
+  B.rows    = Math.floor(usableLen / W);
+  B.rem     = usableLen % W;
+  B.total   = B.rows * B.perRow;
+
+  // 난단에서 회전 배치 가능 여부
+  // A의 난단(A.rem)에 B 방향(rowH=W) 피스가 들어가는지
+  A.remRows   = A.rem >= W ? Math.floor(A.rem / W) : 0;
+  A.remPieces = A.remRows * B.perRow;
+  A.totalAll  = A.total + A.remPieces;
+
+  // B의 난단(B.rem)에 A 방향(rowH=H) 피스가 들어가는지
+  B.remRows   = B.rem >= H ? Math.floor(B.rem / H) : 0;
+  B.remPieces = B.remRows * A.perRow;
+  B.totalAll  = B.total + B.remPieces;
+
+  const best = A.totalAll >= B.totalAll ? 'A' : 'B';
+
+  // 필요 장수에 대한 최소 원단 계산
+  const bOpt = best === 'A' ? A : B;
+  const needed = item.count;
+  const rowsFor = Math.ceil(needed / bOpt.perRow);
+  const fabricFor = rowsFor * bOpt.rowH;
+  const produced = rowsFor * bOpt.perRow;
+
+  // 폭 배치 조합
+  const combos = getWidthCombos(W, H, fabricW);
+
+  // 최적 폭 배치(waste 최소) 기준으로 길이 배열 계산
+  const bestC = combos[0] || null;
+  let bestLen = null;
+  if (bestC) {
+    const rowH = bestC.rowH;
+    const mults = getMultiples(rowH, usableLen);
+    const pans  = Math.floor(usableLen / rowH);
+    const nan   = usableLen % rowH;
+    // 난단에서 반대 방향으로 추가 재단 가능 여부
+    // rowH=H이면 메인은 W폭 배치(H높이) → 난단엔 H폭 배치(W높이) 시도
+    const altH  = rowH === H ? W : H;
+    const altPR = rowH === H ? Math.floor(fabricW / H) : Math.floor(fabricW / W);
+    const nanRows   = nan >= altH ? Math.floor(nan / altH) : 0;
+    const nanPieces = nanRows * altPR;
+    bestLen = { rowH, mults, pans, nan, nanRows, nanPieces, altH, altPR };
+  }
+
+  return { W, H, A, B, best, combos, bestLen, rowsFor, fabricFor, produced, needed };
+}
+
+/* ─────────────────────────────────────────
+   분석 탭 렌더링
+───────────────────────────────────────── */
+function renderAnalysis() {
+  const f = getFabric();
+  const usableLen = f.l - f.k;
+  const container = $id('analysis-content');
+
+  if (!items.length) {
+    container.innerHTML = '<div class="empty">⚙️ 설정 탭에서 원단과 재단 사이즈를 입력해주세요.</div>';
+    return;
+  }
+
+  container.innerHTML = items.map(item => {
+    const a = analyzeItem(item, f.w, usableLen);
+
+    // ① 폭 배치 조합 테이블 (행 높이 열 포함)
+    const minWaste = a.combos.length ? Math.min(...a.combos.map(x => x.waste)) : Infinity;
+    const combosHtml = a.combos.map(c => {
+      const isBest = c.waste === minWaste;
+      const wCls   = c.waste <= 3 ? 'td-waste-good' : c.waste <= 10 ? 'td-waste-ok' : '';
+      return `
+        <tr class="${isBest ? 'best-row' : ''}">
+          <td>${c.formula}${isBest ? ' <span style="color:var(--success);font-size:0.7rem">★최적</span>' : ''}</td>
+          <td class="td-qty">${c.total}장</td>
+          <td class="${wCls}">${c.waste}cm</td>
+          <td style="color:var(--primary);font-weight:700">${c.rowH}cm</td>
+        </tr>
+      `;
+    }).join('');
+
+    // ② 최적 폭 조합 기준 길이 배열
+    let lenSectionHtml = '';
+    if (a.bestLen) {
+      const bl = a.bestLen;
+      const multsHtml = bl.mults.map(v => {
+        const cls = v === usableLen ? 'exact'
+                  : Math.abs(v - usableLen) <= usableLen * 0.05 ? 'near' : '';
+        return `<span class="mult-chip ${cls}">${v}</span>`;
+      }).join('');
+
+      const nanInfo = bl.nan === 0
+        ? `<span style="color:var(--success)">✔ 난단 없음 — ${usableLen}cm가 ${bl.rowH}cm 행의 배수</span>`
+        : bl.nanPieces > 0
+          ? `난단 <strong style="color:var(--warning)">${bl.nan}cm</strong> → 반대 방향(${bl.altH}cm 행) ${bl.nanRows}행 × ${bl.altPR}장 = <strong style="color:var(--success)">${bl.nanPieces}장</strong> 추가 재단 가능`
+          : `난단 <strong style="color:var(--warning)">${bl.nan}cm</strong> → 최소 행 높이(${bl.altH}cm) 미달, 추가 재단 불가`;
+
+      lenSectionHtml = `
+        <div class="divider"></div>
+        <div class="a-section">
+          <div class="a-label">📏 길이 배열
+            <span style="font-weight:400;text-transform:none;letter-spacing:0">
+              — 최적 폭 배치(${a.combos[0]?.formula}) 기준, 행 높이 <strong style="color:var(--primary)">${bl.rowH}cm</strong>
+            </span>
+          </div>
+          <div class="mult-row" style="margin-bottom:10px">
+            ${multsHtml || '<span class="mult-chip">해당 없음</span>'}
+          </div>
+          <div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+            <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:8px 14px;text-align:center;min-width:70px">
+              <div style="font-size:1.3rem;font-weight:800;color:var(--success)">${bl.pans}판</div>
+              <div style="font-size:0.66rem;color:var(--muted);margin-top:2px">완전 행</div>
+            </div>
+            <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:8px 14px;text-align:center;min-width:70px">
+              <div style="font-size:1.3rem;font-weight:800;color:${bl.nan===0?'var(--success)':'var(--warning)'}">${bl.nan}cm</div>
+              <div style="font-size:0.66rem;color:var(--muted);margin-top:2px">난단</div>
+            </div>
+            <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:8px 14px;text-align:center;min-width:70px">
+              <div style="font-size:1.3rem;font-weight:800;color:var(--primary)">${bl.pans * a.combos[0].total + bl.nanPieces}장</div>
+              <div style="font-size:0.66rem;color:var(--muted);margin-top:2px">총 생산</div>
+            </div>
+          </div>
+          <div style="font-size:0.78rem;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.2);border-radius:8px;padding:9px 11px;line-height:1.6">${nanInfo}</div>
+          <div class="hint" style="margin-top:6px">🟢 정확히 맞음 &nbsp;🟡 5% 이내 근접</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="analysis-card" style="border-left-color:${item.color}">
+        <div class="card-title" style="color:${item.color}">■ ${esc(item.name)} &nbsp;${item.width}×${item.height}cm &nbsp;×${item.count}장</div>
+
+        <div class="a-section">
+          <div class="a-label">📐 폭 배치 조합 &nbsp;<span style="font-weight:400;text-transform:none;letter-spacing:0">(원단 폭 ${f.w}cm)</span></div>
+          <table class="combo-table">
+            <thead><tr><th>배치 조합</th><th>수량</th><th>낭비</th><th>행 높이</th></tr></thead>
+            <tbody>${combosHtml || '<tr><td colspan="4" style="color:var(--muted);padding:10px">조합 없음</td></tr>'}</tbody>
+          </table>
+        </div>
+
+        ${lenSectionHtml}
+      </div>
+    `;
+  }).join('');
+}
+
+/* ─────────────────────────────────────────
+   최적 요척 탭 렌더링
+───────────────────────────────────────── */
+function renderYossuk() {
+  const f = getFabric();
+  const usableLen = f.l - f.k;
+  const container = $id('yossuk-content');
+
+  if (!items.length) {
+    container.innerHTML = '<div class="card"><div class="empty">⚙️ 설정 탭에서 원단과 재단 사이즈를 입력해주세요.</div></div>';
+    return;
+  }
+
+  container.innerHTML = items.map(item => {
+    const a   = analyzeItem(item, f.w, usableLen);
+    const opt = a.best === 'A' ? a.A : a.B;
+    const alt = a.best === 'A' ? a.B : a.A;
+
+    // 난단 설명
+    let nanDanHtml = '';
+    if (opt.rem > 0) {
+      if (opt.remPieces > 0) {
+        nanDanHtml = `난단 <strong>${opt.rem}cm</strong> → 회전 배치(${opt.rowH === a.H ? a.W : a.H}cm 행) <strong>${opt.remRows}행 × ${opt.perRow === a.A.perRow ? a.B.perRow : a.A.perRow}장 = ${opt.remPieces}장</strong> 추가 재단 가능`;
+      } else {
+        nanDanHtml = `난단 <strong>${opt.rem}cm</strong> → 최소 필요 높이(${alt.rowH}cm)에 미달 — 추가 재단 불가`;
+      }
+    } else {
+      nanDanHtml = `난단 없음 — ${usableLen}cm가 ${opt.rowH}cm 행의 배수`;
+    }
+
+    // 비교표 HTML
+    function ocHtml(o, isBest) {
+      return `
+        <div class="oc-item ${isBest ? 'best' : ''}">
+          <div class="oc-title">${o.label}${isBest ? '<span class="best-badge">최적</span>' : ''}</div>
+          <div class="oc-row"><span class="oc-key">행당 수량</span><span class="oc-val">${o.perRow}장</span></div>
+          <div class="oc-row"><span class="oc-key">폭 낭비</span><span class="oc-val">${o.wasteW}cm</span></div>
+          <div class="oc-row"><span class="oc-key">판수</span><span class="oc-val">${o.rows}판</span></div>
+          <div class="oc-row"><span class="oc-key">난단</span><span class="oc-val">${o.rem}cm</span></div>
+          <div class="oc-row"><span class="oc-key">+난단 추가</span><span class="oc-val">${o.remPieces}장</span></div>
+          <div class="oc-row"><span class="oc-key">총 생산</span><span class="oc-val" style="color:var(--success)">${o.totalAll}장</span></div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="yossuk-card" style="border-left-color:${item.color}">
+        <div class="card-title" style="color:${item.color}">■ ${esc(item.name)} &nbsp;${item.width}×${item.height}cm &nbsp;×${item.count}장</div>
+
+        <!-- 배치 비교 -->
+        <div class="orient-compare">
+          ${ocHtml(a.A, a.best === 'A')}
+          ${ocHtml(a.B, a.best === 'B')}
+        </div>
+
+        <!-- 최적 판수 -->
+        <div class="yossuk-best">
+          <div class="yb-label">최적 배치 요약</div>
+          <div class="yb-config">
+            <strong>${opt.perRow}장</strong> × <strong>${opt.rows}판</strong> = <strong>${opt.total}장</strong>
+            &nbsp;+&nbsp; 난단 <strong>${opt.remPieces}장</strong>
+            &nbsp;= 총 <strong>${opt.totalAll}장</strong> 생산
+          </div>
+        </div>
+
+        <!-- 난단 정보 -->
+        <div class="nan-dan">${nanDanHtml}</div>
+
+        <!-- 필요 원단 (목표 장수 기준) -->
+        <div class="yb-label" style="margin-bottom:8px">📦 ${item.count}장 생산에 필요한 최소 원단</div>
+        <div class="min-fabric">
+          <span class="mf-val">${a.fabricFor + f.k} cm &nbsp;<small style="font-size:1rem;color:var(--muted)">(${((a.fabricFor + f.k)/100).toFixed(2)}m)</small></span>
+          <span class="mf-sub">
+            ${a.rowsFor}행 × ${opt.rowH}cm + 칼밥 ${f.k}cm = ${a.fabricFor + f.k}cm<br>
+            → ${a.produced}장 생산 (${a.produced - a.needed}장 여분)
+          </span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ─────────────────────────────────────────
+   패킹 알고리즘 (시각화용)
+───────────────────────────────────────── */
+function packItems(bw, bh, trim) {
+  const usable = bh - trim;
+  const result = [];
+  let x = 0, rowY = 0, rowH = 0;
+  const expanded = [];
+  items.forEach(it => { for (let n = 0; n < it.count; n++) expanded.push(it); });
+  expanded.forEach(it => {
+    if (it.width > bw) { result.push({ it, overflow: true }); return; }
+    if (x + it.width > bw) { rowY += rowH; x = 0; rowH = 0; }
+    if (rowY + it.height > usable) { result.push({ it, overflow: true }); return; }
+    result.push({ it, x, y: trim + rowY, overflow: false });
+    rowH = Math.max(rowH, it.height);
+    x += it.width;
+  });
+  return result;
+}
+
+/* ─────────────────────────────────────────
+   캔버스 그리기
+───────────────────────────────────────── */
+function redraw() {
+  const canvas = $id('viz-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const f   = getFabric();
+  const bw  = f.w, bh = f.l, trim = f.k;
+
+  const dpr     = window.devicePixelRatio || 1;
+  const dispW   = canvas.clientWidth || 360;
+  const aspect  = bh / bw;
+  const dispH   = Math.min(dispW * aspect, 480);
+
+  canvas.width  = Math.round(dispW * dpr);
+  canvas.height = Math.round(dispH * dpr);
+  canvas.style.height = Math.round(dispH) + 'px';
+  ctx.scale(dpr, dpr);
+
+  const pad   = 14;
+  const scale = Math.min((dispW - pad*2) / bw, (dispH - pad*2) / bh);
+  const ox    = (dispW - bw * scale) / 2;
+  const oy    = (dispH - bh * scale) / 2;
+
+  ctx.clearRect(0, 0, dispW, dispH);
+
+  // 재단판 (검정)
+  ctx.fillStyle = '#111827'; ctx.strokeStyle = '#4b5563'; ctx.lineWidth = 1.5;
+  roundRect(ctx, ox, oy, bw * scale, bh * scale, 4, true, true);
+
+  // 칼밥 구역
+  if (trim > 0) {
+    const th = trim * scale;
+    ctx.save();
+    ctx.beginPath(); ctx.rect(ox, oy, bw * scale, th); ctx.clip();
+    ctx.fillStyle = 'rgba(251,191,36,0.10)'; ctx.fillRect(ox, oy, bw * scale, th);
+    ctx.strokeStyle = 'rgba(251,191,36,0.28)'; ctx.lineWidth = 1;
+    const step = 9;
+    for (let i = -bh * scale; i < bw * scale + th; i += step) {
+      ctx.beginPath(); ctx.moveTo(ox + i, oy); ctx.lineTo(ox + i + th, oy + th); ctx.stroke();
+    }
+    ctx.restore();
+    ctx.save(); ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(ox, oy + th); ctx.lineTo(ox + bw * scale, oy + th); ctx.stroke();
+    ctx.setLineDash([]); ctx.restore();
+    const fs = clamp(Math.floor(th * 0.45), 9, 12);
+    ctx.fillStyle = '#fbbf24'; ctx.font = `bold ${fs}px sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    if (th >= 13) ctx.fillText(`칼밥 ${trim}cm`, ox + bw * scale / 2, oy + th / 2);
+  }
+
+  // 패킹된 조각
+  const placements = packItems(bw, bh, trim);
+  placements.forEach(p => {
+    if (p.overflow) return;
+    const rx = ox + p.x * scale, ry = oy + p.y * scale;
+    const rw = p.it.width * scale, rh = p.it.height * scale;
+    ctx.fillStyle = p.it.color + '44'; ctx.fillRect(rx, ry, rw, rh);
+    ctx.strokeStyle = p.it.color; ctx.lineWidth = 1.5;
+    ctx.strokeRect(rx + 0.75, ry + 0.75, rw - 1.5, rh - 1.5);
+    if (rw > 24 && rh > 16) {
+      const fs = clamp(Math.floor(Math.min(rw, rh) * 0.22), 8, 11);
+      ctx.fillStyle = p.it.color; ctx.font = `bold ${fs}px sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (rw > 38) ctx.fillText(`${p.it.width}×${p.it.height}`, rx + rw/2, ry + rh/2);
+    }
+  });
+
+  // 치수 표기
+  ctx.fillStyle = '#4b5563'; ctx.font = '10px sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  ctx.fillText(`${bw}cm`, ox + bw * scale / 2, oy + bh * scale + 4);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  ctx.fillText(`${bh}cm`, ox - 4, oy + bh * scale / 2);
+
+  // 범례
+  $id('legend').innerHTML = items.map(it => `
+    <div class="leg-item"><div class="leg-dot" style="background:${it.color}"></div>
+    <span>${esc(it.name)} ${it.width}×${it.height} ×${it.count}</span></div>
+  `).join('');
+
+  // 통계
+  const fit  = placements.filter(p => !p.overflow).length;
+  const over = placements.filter(p =>  p.overflow).length;
+  const usableArea = bw * Math.max(bh - trim, 0);
+  const usedArea   = placements.filter(p => !p.overflow).reduce((s, p) => s + p.it.width * p.it.height, 0);
+  const util = usableArea > 0 ? Math.round(usedArea / usableArea * 100) : 0;
+  $id('s-fit').textContent  = fit;
+  $id('s-over').textContent = over;
+  $id('s-util').textContent = util + '%';
+}
+
+/* ─────────────────────────────────────────
+   유틸
+───────────────────────────────────────── */
+function $id(id)        { return document.getElementById(id); }
+function setVal(id, v)  { const el = $id(id); if (el) el.value = v; }
+function esc(s)         { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function clamp(v,mn,mx) { return Math.max(mn, Math.min(mx, v)); }
+function loadJSON(k)    { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }
+function saveJSON(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
+  if (fill) ctx.fill(); if (stroke) ctx.stroke();
+}
+
+/* ─────────────────────────────────────────
+   시작
+───────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('resize', () => { if ($id('tab-yossuk').classList.contains('active')) redraw(); });
+</script>
+</body>
+</html>
