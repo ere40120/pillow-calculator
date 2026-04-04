@@ -18,978 +18,1157 @@
       --success: #34d399; --warning: #fbbf24; --danger: #f87171;
       --radius: 14px;
     }
-    body { font-family: 'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 48px; }
+    body { font-family: 'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 52px; }
 
-    /* ── Header ── */
-    header { background: linear-gradient(135deg,#1e1b4b,#312e81); padding: 20px 20px 16px; text-align: center; border-bottom: 1px solid #3730a3; }
+    header { background: linear-gradient(135deg,#1e1b4b,#312e81); padding: 18px 20px 14px; text-align: center; border-bottom: 1px solid #3730a3; }
     header h1 { font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
     header p  { font-size: 0.75rem; color: #a5b4fc; margin-top: 3px; }
 
-    /* ── Tabs ── */
     .tab-bar { display: flex; background: #1e293b; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-    .tab-btn { flex: 1; padding: 12px 8px; font-size: 0.8rem; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; border-bottom: 2.5px solid transparent; transition: all 0.18s; letter-spacing: -0.2px; }
+    .tab-btn { flex: 1; padding: 12px 6px; font-size: 0.78rem; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; border-bottom: 2.5px solid transparent; transition: all 0.18s; letter-spacing: -0.3px; }
     .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(129,140,248,0.06); }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
-    /* ── Container ── */
-    .container { max-width: 560px; margin: 0 auto; padding: 14px 14px; }
-
-    /* ── Card ── */
-    .card { background: var(--card); border-radius: var(--radius); padding: 18px; margin-bottom: 12px; border: 1px solid var(--border); }
+    .container { max-width: 560px; margin: 0 auto; padding: 14px; }
+    .card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
     .card-title { font-size: 0.7rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
 
-    /* ── Form ── */
-    .field { margin-bottom: 12px; }
+    .field { margin-bottom: 11px; }
     .field:last-child { margin-bottom: 0; }
-    label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+    label { display: block; font-size: 0.76rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
     .input-wrap { position: relative; }
     input[type="number"], input[type="text"] {
-      width: 100%; padding: 10px 38px 10px 12px; background: var(--card2);
-      border: 1.5px solid var(--border); border-radius: 9px; font-size: 0.95rem;
+      width: 100%; padding: 9px 36px 9px 11px; background: var(--card2);
+      border: 1.5px solid var(--border); border-radius: 9px; font-size: 0.93rem;
       color: var(--text); outline: none; transition: border-color 0.18s, box-shadow 0.18s; -webkit-appearance: none;
     }
     input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(129,140,248,0.15); }
-    input[type="text"] { padding-right: 12px; }
-    .unit { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; color: var(--muted); pointer-events: none; font-weight: 600; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+    input[type="text"] { padding-right: 11px; }
+    .unit { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 0.73rem; color: var(--muted); pointer-events: none; font-weight: 600; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 9px; }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 9px; }
 
-    /* ── Buttons ── */
-    .btn-primary { width: 100%; padding: 12px; background: var(--primary-dark); color: #fff; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.1s; letter-spacing: -0.2px; }
+    .btn-primary { width: 100%; padding: 11px; background: var(--primary-dark); color: #fff; border: none; border-radius: 10px; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.1s; letter-spacing: -0.2px; }
     .btn-primary:hover { background: #4338ca; }
     .btn-primary:active { transform: scale(0.98); }
-    .btn-sm { padding: 8px 14px; background: var(--card2); color: var(--muted); border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .btn-sm { padding: 7px 12px; background: var(--card2); color: var(--muted); border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.76rem; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
     .btn-sm:hover { border-color: var(--primary); color: var(--primary); }
 
-    /* ── Color picker ── */
-    .color-picker { display: flex; gap: 7px; flex-wrap: wrap; }
-    .color-dot { width: 26px; height: 26px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.12s; flex-shrink: 0; }
+    .check-row { display: flex; align-items: center; gap: 8px; margin-bottom: 11px; }
+    .check-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+    .check-row label { margin-bottom: 0; font-size: 0.82rem; cursor: pointer; color: var(--text); font-weight: 600; }
+
+    .divider { height: 1px; background: var(--border); margin: 13px 0; }
+    .hint { font-size: 0.72rem; color: var(--muted); margin-top: 5px; line-height: 1.55; }
+    .empty { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 20px 0; }
+
+    /* 프리셋 칩 */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 13px; }
+    .preset-chip { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px 5px 11px; background: var(--card2); border: 1.5px solid var(--border); border-radius: 20px; font-size: 0.78rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+    .preset-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .preset-chip .p-del { font-size: 0.63rem; color: var(--border); margin-left: 2px; transition: color 0.12s; }
+    .preset-chip:hover .p-del { color: var(--danger); }
+    .save-row { display: flex; gap: 8px; margin-top: 11px; }
+    .save-row input { flex: 1; padding-right: 11px; }
+
+    /* 조각 목록 */
+    .pieces-list { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; }
+    .piece-row { display: flex; align-items: center; gap: 8px; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 9px 10px; }
+    .piece-swatch { width: 10px; height: 38px; border-radius: 4px; flex-shrink: 0; }
+    .piece-info { flex: 1; min-width: 0; }
+    .piece-name-lbl { font-size: 0.85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .piece-size-lbl { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+    .piece-cols { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+    .col-group { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .col-lbl { font-size: 0.62rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .col-inp { width: 46px; padding: 5px 4px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 7px; font-size: 0.9rem; color: var(--text); outline: none; text-align: center; -webkit-appearance: none; }
+    .col-inp:focus { border-color: var(--primary); }
+    .piece-del { width: 22px; height: 22px; border-radius: 50%; background: var(--border); border: none; color: var(--muted); font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.12s, color 0.12s; }
+    .piece-del:hover { background: var(--danger); color: #fff; }
+
+    /* 폭 요약 바 */
+    .width-bar-wrap { margin: 12px 0 6px; }
+    .width-bar-track { height: 22px; background: var(--border); border-radius: 6px; overflow: hidden; display: flex; }
+    .width-bar-seg { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; }
+    .width-bar-waste { height: 100%; background: rgba(148,163,184,0.1); }
+    .width-summary { display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 6px; }
+    .width-ok   { color: var(--success); font-weight: 700; }
+    .width-warn { color: var(--warning); font-weight: 700; }
+    .width-over { color: var(--danger);  font-weight: 700; }
+
+    /* 컬러 피커 */
+    .color-picker { display: flex; gap: 5px; flex-wrap: wrap; }
+    .color-dot { width: 22px; height: 22px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: transform 0.12s; flex-shrink: 0; }
     .color-dot:hover { transform: scale(1.15); }
     .color-dot.selected { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
 
-    /* ── Chip rows ── */
-    .chip-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
-    .sz-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px 5px 11px; background: var(--card2); border: 1.5px solid var(--border); border-radius: 20px; font-size: 0.78rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.15s; user-select: none; }
-    .sz-chip:hover { border-color: var(--primary); color: var(--primary); }
-    .sz-chip .del { font-size: 0.65rem; color: var(--border); transition: color 0.12s; }
-    .sz-chip:hover .del { color: var(--danger); }
+    /* 누비 조각별 로스 */
+    .nubi-piece-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(51,65,85,0.5); gap: 8px; }
+    .nubi-piece-row:last-child { border-bottom: none; }
+    .nubi-piece-name { font-size: 0.82rem; font-weight: 700; }
+    .nubi-piece-sz   { font-size: 0.7rem; color: var(--muted); }
+    .nubi-loss-inp { width: 58px; padding: 6px 6px; background: var(--card2); border: 1.5px solid var(--border); border-radius: 7px; font-size: 0.88rem; color: var(--text); outline: none; text-align: center; -webkit-appearance: none; }
+    .nubi-loss-inp:focus { border-color: var(--primary); }
 
-    /* ── Item list ── */
-    .items-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-    .item-row { display: flex; align-items: center; gap: 10px; background: var(--card2); border: 1px solid var(--border); border-left: 4px solid transparent; border-radius: 10px; padding: 10px 12px; }
-    .item-swatch { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
-    .item-info { flex: 1; min-width: 0; }
-    .item-name { font-size: 0.88rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .item-size { font-size: 0.74rem; color: var(--muted); margin-top: 1px; }
-    .item-cnt { background: rgba(129,140,248,0.14); color: var(--primary); font-size: 0.74rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; flex-shrink: 0; }
-    .item-del { width: 22px; height: 22px; border-radius: 50%; background: var(--border); border: none; color: var(--muted); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.12s, color 0.12s; }
-    .item-del:hover { background: var(--danger); color: #fff; }
+    /* 배치 분석 탭 */
+    .layout-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    .layout-table th { text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 700; font-size: 0.68rem; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.4px; }
+    .layout-table td { padding: 7px 8px; border-bottom: 1px solid rgba(51,65,85,0.4); color: var(--text); vertical-align: middle; }
+    .layout-table tr:last-child td { border-bottom: none; }
+    .badge-stand { font-size: 0.63rem; background: rgba(129,140,248,0.15); color: var(--primary); padding: 2px 6px; border-radius: 5px; font-weight: 700; }
+    .badge-lie   { font-size: 0.63rem; background: rgba(251,191,36,0.15);  color: var(--warning); padding: 2px 6px; border-radius: 5px; font-weight: 700; }
 
-    /* ── Presets ── */
-    .preset-row { display: flex; flex-wrap: wrap; gap: 7px; }
-    .preset-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px 5px 12px; background: var(--card2); border: 1.5px solid var(--border); border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.15s; }
-    .preset-chip:hover { border-color: var(--primary); color: var(--primary); }
-    .preset-chip .p-del { font-size: 0.65rem; color: var(--border); transition: color 0.12s; }
-    .preset-chip:hover .p-del { color: var(--danger); }
-    .save-row { display: flex; gap: 8px; margin-top: 12px; }
-    .save-row input { flex: 1; padding-right: 12px; }
+    .cross-grid { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0; }
+    .cross-chip { padding: 4px 9px; background: var(--card2); border: 1px solid var(--border); border-radius: 7px; font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; cursor: pointer; transition: all 0.15s; }
+    .cross-chip:hover { border-color: var(--primary); color: var(--primary); }
+    .cross-chip.best { border-color: var(--success); color: var(--success); background: rgba(52,211,153,0.08); }
+    .cross-chip.sel  { border-color: var(--primary); color: var(--primary); background: rgba(129,140,248,0.12); }
 
-    /* ── Divider / hint / empty ── */
-    .divider { height: 1px; background: var(--border); margin: 14px 0; }
-    .hint { font-size: 0.73rem; color: var(--muted); margin-top: 6px; line-height: 1.5; }
-    .empty { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 20px 0; }
+    /* 요척 탭 */
+    .result-card { background: var(--card); border-radius: var(--radius); padding: 15px; margin-bottom: 11px; border: 1px solid var(--border); }
+    .step-label { font-size: 0.67rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 9px; }
+    .info-box { border-radius: 9px; padding: 10px 12px; margin-bottom: 9px; font-size: 0.79rem; line-height: 1.75; }
+    .info-blue   { background: rgba(129,140,248,0.08); border: 1px solid rgba(129,140,248,0.2); }
+    .info-green  { background: rgba(52,211,153,0.07);  border: 1px solid rgba(52,211,153,0.25); }
+    .info-yellow { background: rgba(251,191,36,0.07);  border: 1px solid rgba(251,191,36,0.25); }
+    .info-red    { background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.25); }
 
-    /* ── Checkbox ── */
-    .check-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .check-row input[type="checkbox"] { width: auto; accent-color: var(--primary); cursor: pointer; }
-    .check-row label { margin-bottom: 0; font-size: 0.8rem; cursor: pointer; }
+    .num-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 9px; }
+    .num-item { background: var(--card2); border: 1px solid var(--border); border-radius: 9px; padding: 9px 8px; text-align: center; }
+    .num-val  { font-size: 1.3rem; font-weight: 800; line-height: 1; }
+    .num-lbl  { font-size: 0.63rem; color: var(--muted); margin-top: 3px; line-height: 1.3; }
+    .num-sub  { font-size: 0.63rem; color: var(--muted); margin-top: 2px; }
+    .cv-blue   { color: var(--primary); }
+    .cv-green  { color: var(--success); }
+    .cv-yellow { color: var(--warning); }
+    .cv-red    { color: var(--danger); }
 
-    /* ── Canvas ── */
-    #viz-canvas { width: 100%; display: block; border-radius: 10px; background: #0d1117; border: 1px solid var(--border); }
-    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .leg-item { display: flex; align-items: center; gap: 5px; font-size: 0.74rem; color: var(--muted); }
-    .leg-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
-    .stats-row { display: flex; gap: 8px; margin-top: 10px; }
-    .stat { flex: 1; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 8px; text-align: center; }
-    .stat-val { font-size: 1.3rem; font-weight: 800; line-height: 1; }
-    .stat-lbl { font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
-    .sv-green { color: var(--success); }
-    .sv-yellow { color: var(--warning); }
-    .sv-red { color: var(--danger); }
-    .sv-blue { color: var(--primary); }
+    /* 조각별 결과 */
+    .piece-result { background: var(--card2); border: 1px solid var(--border); border-left: 4px solid; border-radius: 10px; padding: 11px 12px; margin-bottom: 8px; }
+    .pr-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .pr-name   { font-size: 0.88rem; font-weight: 700; }
+    .pr-total  { font-size: 1.2rem;  font-weight: 800; }
+    .pr-cells  { display: grid; gap: 6px; }
+    .pr-cell   { background: var(--card); border-radius: 7px; padding: 7px; text-align: center; }
+    .pr-val    { font-size: 1rem; font-weight: 800; }
+    .pr-lbl    { font-size: 0.6rem; color: var(--muted); margin-top: 2px; }
 
-    /* ══════════════════════════════════════════
-       분석 탭 스타일
-    ══════════════════════════════════════════ */
-    .analysis-card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); border-left: 4px solid var(--border); }
-    .a-section { margin-bottom: 14px; }
-    .a-label { font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .a-sublabel { font-size: 0.72rem; color: var(--primary); font-weight: 600; margin-bottom: 5px; margin-top: 8px; }
-    .mult-row { display: flex; flex-wrap: wrap; gap: 4px; max-height: 80px; overflow-y: auto; padding-right: 4px; }
-    .mult-chip { padding: 3px 7px; background: var(--card2); border: 1px solid var(--border); border-radius: 6px; font-size: 0.72rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
-    .mult-chip.near { border-color: var(--warning); color: var(--warning); }
-    .mult-chip.exact { border-color: var(--success); color: var(--success); background: rgba(52,211,153,0.1); }
+    .formula-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(51,65,85,0.4); font-size: 0.77rem; }
+    .formula-row:last-child { border-bottom: none; }
+    .formula-key { color: var(--muted); }
+    .formula-val { font-weight: 700; }
 
-    /* 폭 배치 테이블 */
-    .combo-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
-    .combo-table th { text-align: left; padding: 6px 8px; color: var(--muted); font-weight: 600; font-size: 0.7rem; border-bottom: 1px solid var(--border); }
-    .combo-table td { padding: 7px 8px; border-bottom: 1px solid rgba(51,65,85,0.5); color: var(--text); }
-    .combo-table tr:last-child td { border-bottom: none; }
-    .combo-table tr.best-row td { background: rgba(52,211,153,0.07); }
-    .combo-table tr.best-row td:first-child { border-left: 3px solid var(--success); padding-left: 5px; }
-    .td-waste-good { color: var(--success); font-weight: 700; }
-    .td-waste-ok { color: var(--warning); }
-    .td-qty { font-weight: 700; color: var(--primary); }
+    .total-box { background: linear-gradient(135deg,rgba(79,70,229,0.15),rgba(99,102,241,0.08)); border: 1.5px solid rgba(129,140,248,0.3); border-radius: 12px; padding: 15px; text-align: center; margin-top: 4px; }
+    .total-val { font-size: 2.2rem; font-weight: 900; color: var(--primary); line-height: 1; }
+    .total-lbl { font-size: 0.78rem; color: var(--muted); margin-top: 5px; }
+    .total-eq  { font-size: 0.74rem; color: var(--muted); margin-top: 7px; line-height: 1.7; }
 
-    /* ══════════════════════════════════════════
-       요척 탭 스타일
-    ══════════════════════════════════════════ */
-    .yossuk-card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); border-left: 4px solid var(--border); }
-    .yossuk-best { background: rgba(129,140,248,0.08); border: 1px solid rgba(129,140,248,0.2); border-radius: 9px; padding: 10px 12px; margin-bottom: 12px; }
-    .yb-label { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-    .yb-config { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
-    .yb-config strong { color: var(--primary); }
+    footer { text-align: center; color: var(--muted); font-size: 0.7rem; margin-top: 18px; }
 
-    /* 판수 그리드 */
-    .pan-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-    .pan-item { background: var(--card2); border: 1px solid var(--border); border-radius: 9px; padding: 10px 8px; text-align: center; }
-    .pan-val { font-size: 1.4rem; font-weight: 800; line-height: 1; }
-    .pan-lbl { font-size: 0.65rem; color: var(--muted); margin-top: 3px; }
-    .pan-sub { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+    /* 모드 토글 */
+    .mode-toggle { display: flex; gap: 6px; margin-bottom: 14px; }
+    .mode-btn { flex: 1; padding: 9px 6px; background: var(--card2); border: 1.5px solid var(--border); border-radius: 9px; font-size: 0.8rem; font-weight: 700; color: var(--muted); cursor: pointer; transition: all 0.15s; letter-spacing: -0.2px; }
+    .mode-btn.active { background: rgba(129,140,248,0.12); border-color: var(--primary); color: var(--primary); }
+    .mode-btn:hover:not(.active) { border-color: var(--muted); color: var(--text); }
 
-    /* 난단 정보 */
-    .nan-dan { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.25); border-radius: 9px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.8rem; line-height: 1.6; color: var(--text); }
-    .nan-dan strong { color: var(--warning); }
+    /* 자동 배치 후보 */
+    .combo-list { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
+    .combo-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: var(--card2); border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.15s; gap: 8px; }
+    .combo-item:hover { border-color: var(--primary); }
+    .combo-item.best-combo { border-color: var(--success); }
+    .combo-item.sel-combo  { border-color: var(--primary); background: rgba(129,140,248,0.1); }
+    .combo-formula { font-size: 0.78rem; font-weight: 700; color: var(--text); flex: 1; line-height: 1.5; }
+    .combo-formula small { display: block; font-weight: 400; color: var(--muted); font-size: 0.68rem; margin-top: 1px; }
+    .combo-badge { font-size: 0.7rem; font-weight: 700; white-space: nowrap; padding: 3px 8px; border-radius: 6px; }
+    .combo-badge-ok   { background: rgba(52,211,153,0.12);  color: var(--success); }
+    .combo-badge-warn { background: rgba(251,191,36,0.12);  color: var(--warning); }
+    .combo-badge-best { background: rgba(52,211,153,0.18);  color: var(--success); border: 1px solid rgba(52,211,153,0.35); }
+    .combo-applied { display: inline-flex; align-items: center; gap: 4px; font-size: 0.68rem; color: var(--success); font-weight: 700; margin-top: 6px; }
 
-    /* 필요 원단 */
-    .min-fabric { background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.25); border-radius: 9px; padding: 10px 12px; }
-    .mf-val { font-size: 1.6rem; font-weight: 800; color: var(--success); display: block; }
-    .mf-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; line-height: 1.5; }
-
-    /* 비교표 */
-    .orient-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-    .oc-item { background: var(--card2); border: 1px solid var(--border); border-radius: 9px; padding: 10px; }
-    .oc-item.best { border-color: var(--success); background: rgba(52,211,153,0.06); }
-    .oc-title { font-size: 0.7rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
-    .oc-title .best-badge { font-size: 0.62rem; background: var(--success); color: #000; padding: 1px 5px; border-radius: 4px; font-weight: 800; }
-    .oc-row { display: flex; justify-content: space-between; font-size: 0.76rem; padding: 2px 0; }
-    .oc-key { color: var(--muted); }
-    .oc-val { font-weight: 700; }
-
-    /* footer */
-    footer { text-align: center; color: var(--muted); font-size: 0.72rem; margin-top: 20px; }
+    /* 배치 다이어그램 */
+    .diagram-wrap { background: #0a0f1e; border-radius: 10px; padding: 10px 6px 6px; overflow: hidden; }
+    .diagram-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; font-size: 0.68rem; color: var(--muted); }
+    .diag-leg-item { display: flex; align-items: center; gap: 4px; }
+    .diag-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>✂️ 재단 계산기</h1>
-  <p>사각형 재단 레이아웃 최적화</p>
+  <p>다품종 교차 배치 요척 계산 시스템</p>
 </header>
 
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="settings" onclick="showTab('settings')">⚙️ 설정</button>
-  <button class="tab-btn" data-tab="analysis" onclick="showTab('analysis')">📐 사이즈 분석</button>
-  <button class="tab-btn" data-tab="yossuk" onclick="showTab('yossuk')">📊 최적 요척</button>
+  <button class="tab-btn" data-tab="analysis"  onclick="showTab('analysis')">📐 배치 분석</button>
+  <button class="tab-btn" data-tab="yossuk"    onclick="showTab('yossuk')">📊 요척 계산</button>
 </div>
 
-<!-- ══════════════════════════════════════════
-     TAB 1: 설정
-══════════════════════════════════════════ -->
+<!-- ══════════ TAB 1: 설정 ══════════ -->
 <div id="tab-settings" class="tab-pane active">
 <div class="container">
 
   <!-- 원단 설정 -->
   <div class="card">
     <div class="card-title">🧵 원단 설정</div>
-
-    <!-- 저장된 원단 프리셋 -->
     <div id="fabric-preset-area" style="display:none">
-      <div style="font-size:0.72rem;color:var(--muted);font-weight:700;margin-bottom:7px;">저장된 원단 — 탭하여 불러오기</div>
+      <div style="font-size:0.71rem;color:var(--muted);font-weight:700;margin-bottom:6px;">저장된 원단 — 탭하여 불러오기</div>
       <div class="chip-row" id="fabric-preset-chips"></div>
       <div class="divider"></div>
     </div>
-
-    <div class="grid-3">
+    <div class="grid-2">
       <div class="field">
         <label>원단 폭</label>
-        <div class="input-wrap">
-          <input type="number" id="fabric-w" value="162" min="1" step="1">
-          <span class="unit">cm</span>
-        </div>
+        <div class="input-wrap"><input type="number" id="fabric-w" value="162" min="1" step="1"><span class="unit">cm</span></div>
       </div>
       <div class="field">
-        <label>작업판 길이</label>
-        <div class="input-wrap">
-          <input type="number" id="fabric-len" value="800" min="1" step="10">
-          <span class="unit">cm</span>
-        </div>
+        <label>원단 총 길이</label>
+        <div class="input-wrap"><input type="number" id="fabric-total" value="5352" min="1" step="1"><span class="unit">cm</span></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label>재단판 최대 길이</label>
+        <div class="input-wrap"><input type="number" id="board-len" value="800" min="1" step="10"><span class="unit">cm</span></div>
       </div>
       <div class="field">
         <label>칼밥</label>
-        <div class="input-wrap">
-          <input type="number" id="kalbab" value="3" min="0" step="0.5">
-          <span class="unit">cm</span>
-        </div>
+        <div class="input-wrap"><input type="number" id="kalbab" value="3" min="0" step="0.5"><span class="unit">cm</span></div>
       </div>
     </div>
-    <div class="hint">💡 칼밥: 원단 끝 수평을 맞추기 위해 나라시 후 잘라내는 여유분</div>
-    <div class="save-row" style="margin-top:12px;">
+    <div class="hint">💡 재단판 최대 길이: 작업대 길이 · 칼밥: 나라시 후 잘라내는 여유분</div>
+    <div class="save-row" style="margin-top:11px">
       <input type="text" id="fabric-preset-name" placeholder="원단 설정 이름 (예: 광폭162)">
       <button class="btn-sm" onclick="saveFabricPreset()">저장</button>
     </div>
   </div>
 
-  <!-- 재단 사이즈 추가 -->
+  <!-- 재단 사이즈 & 폭 배치 -->
   <div class="card">
-    <div class="card-title">✂️ 재단 사이즈</div>
+    <div class="card-title">✂️ 재단 사이즈 & 폭 배치</div>
 
-    <div id="saved-sz-area" style="display:none">
-      <div style="font-size:0.72rem;color:var(--muted);font-weight:700;margin-bottom:7px;">저장된 사이즈 — 탭하여 폼에 불러오기</div>
-      <div class="chip-row" id="saved-sz-chips"></div>
+    <!-- 모드 토글 -->
+    <div class="mode-toggle">
+      <button class="mode-btn" id="mode-btn-auto"   onclick="setLayoutMode('auto')">🔍 자동 분석</button>
+      <button class="mode-btn" id="mode-btn-manual" onclick="setLayoutMode('manual')">✏️ 수동 입력</button>
+    </div>
+
+    <div id="size-preset-area" style="display:none">
+      <div style="font-size:0.71rem;color:var(--muted);font-weight:700;margin-bottom:6px;">즐겨찾기 — 탭하여 폼에 채우기</div>
+      <div class="chip-row" id="size-preset-chips"></div>
       <div class="divider"></div>
     </div>
 
-    <div class="grid-2">
-      <div class="field">
+    <!-- 추가 폼 -->
+    <div class="grid-2" style="margin-bottom:8px">
+      <div class="field" style="margin-bottom:0">
         <label>이름</label>
-        <input type="text" id="item-name" placeholder="예: 앞판">
+        <input type="text" id="new-name" placeholder="예: 베개">
       </div>
-      <div class="field">
-        <label>수량</label>
-        <div class="input-wrap">
-          <input type="number" id="item-cnt" value="1" min="1" step="1">
-          <span class="unit">장</span>
-        </div>
+      <div class="field" style="margin-bottom:0">
+        <label>색상</label>
+        <div class="color-picker" id="color-picker"></div>
       </div>
     </div>
-    <div class="grid-2">
-      <div class="field">
-        <label>가로 (W)</label>
-        <div class="input-wrap">
-          <input type="number" id="item-w" placeholder="0" min="1">
-          <span class="unit">cm</span>
-        </div>
+    <!-- W/H + 수동 열수 입력 (auto모드: grid-2, manual모드: grid-4) -->
+    <div id="form-wh-row" class="grid-2" style="margin-bottom:9px">
+      <div class="field" style="margin-bottom:0">
+        <label>W (cm)</label>
+        <div class="input-wrap"><input type="number" id="new-w" placeholder="46" min="1"></div>
       </div>
-      <div class="field">
-        <label>세로 (H)</label>
-        <div class="input-wrap">
-          <input type="number" id="item-h" placeholder="0" min="1">
-          <span class="unit">cm</span>
-        </div>
+      <div class="field" style="margin-bottom:0">
+        <label>H (cm)</label>
+        <div class="input-wrap"><input type="number" id="new-h" placeholder="67" min="1"></div>
       </div>
     </div>
-    <div class="field">
-      <label>색상</label>
-      <div class="color-picker" id="color-picker"></div>
+    <div id="form-cols-row" class="grid-2" style="margin-bottom:9px;display:none">
+      <div class="field" style="margin-bottom:0">
+        <label>세운 열</label>
+        <div class="input-wrap"><input type="number" id="new-stand" value="1" min="0"></div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>눕힌 열</label>
+        <div class="input-wrap"><input type="number" id="new-lie" value="0" min="0"></div>
+      </div>
     </div>
-    <div class="check-row">
-      <input type="checkbox" id="do-save-sz">
-      <label for="do-save-sz">이 사이즈를 저장목록에 추가</label>
+    <div style="display:flex;gap:8px;margin-bottom:5px">
+      <button class="btn-primary" onclick="addPiece()" style="flex:1">+ 사이즈 추가</button>
+      <button class="btn-sm" onclick="quickSaveSize()">즐겨찾기</button>
     </div>
-    <button class="btn-primary" onclick="addItem()">+ 재단 추가</button>
-    <div class="items-list" id="items-list"></div>
+    <div class="hint" id="mode-hint">💡 사이즈를 추가한 뒤 <strong>폭 배치 분석</strong> 버튼을 눌러 최적 조합을 찾으세요.</div>
+
+    <!-- 조각 목록 -->
+    <div class="pieces-list" id="pieces-list"></div>
+
+    <!-- 자동 분석 버튼 & 결과 -->
+    <div id="auto-combo-area">
+      <div class="divider" style="margin: 12px 0 10px"></div>
+      <button class="btn-primary" onclick="runAutoAnalysis()" style="margin-bottom:10px">🔍 폭 배치 후보 분석</button>
+      <div id="auto-combo-results"></div>
+    </div>
+
+    <!-- 폭 요약 바 -->
+    <div id="width-bar-wrap" style="display:none">
+      <div class="divider" style="margin-top:12px"></div>
+      <div class="width-bar-track" id="width-bar-track"></div>
+      <div class="width-summary" id="width-summary"></div>
+    </div>
+
+    <div class="save-row" style="margin-top:10px">
+      <input type="text" id="size-preset-name" placeholder="현재 조각 목록 즐겨찾기 저장">
+      <button class="btn-sm" onclick="savePieceListPreset()">저장</button>
+    </div>
   </div>
 
-  <!-- 세트 저장 -->
+  <!-- 누비 로스 -->
+  <div class="card">
+    <div class="card-title">🧶 누비 원단 로스 설정</div>
+    <div class="check-row">
+      <input type="checkbox" id="nubi-enabled" onchange="toggleNubi()">
+      <label for="nubi-enabled">누비 원단 로스 차감 적용</label>
+    </div>
+    <div id="nubi-fields" style="display:none">
+      <div class="grid-2" style="margin-bottom:12px">
+        <div class="field">
+          <label>원단 바꾼 횟수</label>
+          <div class="input-wrap"><input type="number" id="nubi-fabric" value="2" min="0"><span class="unit">회</span></div>
+        </div>
+        <div class="field">
+          <label>실 바꾼 횟수</label>
+          <div class="input-wrap"><input type="number" id="nubi-thread" value="1" min="0"><span class="unit">회</span></div>
+        </div>
+      </div>
+      <div class="hint" style="margin-bottom:8px">💡 교체 1회당 해당 조각의 <strong>배치 열수</strong>만큼 자동 차감<br>(세운열+눕힌열 × 교체 횟수)</div>
+      <div id="nubi-piece-rows"><div class="hint">조각을 먼저 추가해주세요.</div></div>
+    </div>
+  </div>
+
+  <!-- 세트 프리셋 -->
   <div class="card">
     <div class="card-title">💾 세트 저장 · 불러오기</div>
-    <div class="preset-row" id="preset-row">
-      <div class="empty">저장된 세트가 없습니다</div>
+    <div class="chip-row" id="set-preset-chips">
+      <div class="empty" style="width:100%;padding:8px 0">저장된 세트가 없습니다</div>
     </div>
     <div class="save-row">
-      <input type="text" id="preset-name-inp" placeholder="세트 이름 입력 후 저장">
-      <button class="btn-sm" onclick="savePreset()">저장</button>
+      <input type="text" id="set-preset-name" placeholder="세트 이름 (원단+조각+누비 전체 저장)">
+      <button class="btn-sm" onclick="saveSetPreset()">저장</button>
     </div>
   </div>
 
-  <footer>재단 계산기 v2.1</footer>
+  <footer>재단 계산기 v3.2</footer>
 </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     TAB 2: 사이즈 분석
-══════════════════════════════════════════ -->
+<!-- ══════════ TAB 2: 배치 분석 ══════════ -->
 <div id="tab-analysis" class="tab-pane">
 <div class="container">
   <div id="analysis-content">
-    <div class="empty">⚙️ 설정 탭에서 원단과 재단 사이즈를 먼저 입력해주세요.</div>
+    <div class="empty">⚙️ 설정 탭에서 조각을 추가해주세요.</div>
   </div>
-  <footer>재단 계산기 v2.1</footer>
+  <footer>재단 계산기 v3.2</footer>
 </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     TAB 3: 최적 요척
-══════════════════════════════════════════ -->
+<!-- ══════════ TAB 3: 요척 계산 ══════════ -->
 <div id="tab-yossuk" class="tab-pane">
 <div class="container">
-  <div id="yossuk-content"></div>
-
-  <!-- 캔버스 시각화 -->
-  <div class="card">
-    <div class="card-title">🖼️ 재단판 시각화</div>
-    <canvas id="viz-canvas"></canvas>
-    <div class="legend" id="legend"></div>
-    <div class="stats-row">
-      <div class="stat"><div class="stat-val sv-green" id="s-fit">0</div><div class="stat-lbl">재단 가능</div></div>
-      <div class="stat"><div class="stat-val sv-red"   id="s-over">0</div><div class="stat-lbl">초과</div></div>
-      <div class="stat"><div class="stat-val sv-blue"  id="s-util">0%</div><div class="stat-lbl">활용률</div></div>
-    </div>
+  <div id="yossuk-content">
+    <div class="empty">⚙️ 설정 탭에서 값을 입력해주세요.</div>
   </div>
-
-  <footer>재단 계산기 v2.1</footer>
+  <footer>재단 계산기 v3.2</footer>
 </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     JavaScript
-══════════════════════════════════════════ -->
 <script>
-/* ─────────────────────────────────────────
-   상수
-───────────────────────────────────────── */
+/* ══════════════════════════════════════════
+   상수 & 상태
+══════════════════════════════════════════ */
 const COLORS = ['#ef4444','#3b82f6','#eab308','#22c55e','#f97316','#a855f7','#ec4899','#06b6d4','#f43f5e','#84cc16'];
-const LS_SIZES         = 'jaedanSizes';
-const LS_PRESETS       = 'jaedanPresets';
-const LS_FABRIC        = 'jaedanFabric';
-const LS_FABRIC_PRESET = 'jaedanFabricPresets';
+const LS = {
+  FABRIC:'jdFabric', FABRIC_PRE:'jdFabricPresets',
+  PIECES:'jdPieces3', SIZE_FAVE:'jdSizeFave3', PIECE_LIST_PRE:'jdPieceListPre3',
+  SET_PRE:'jdSetPre3', SEL_CROSS:'jdSelCross3'
+};
 
-/* ─────────────────────────────────────────
-   상태
-───────────────────────────────────────── */
-let items    = [];
-let nextId   = 1;
-let selColor = COLORS[0];
+let pieces      = [];   // [{id,name,W,H,standCols,lyingCols,color,lossPerChange}]
+let nextId      = 1;
+let selColor    = COLORS[0];
+let layoutMode  = 'auto';   // 'auto' | 'manual'
+let autoCombos  = [];       // 마지막 자동분석 결과
+let selComboIdx = -1;       // 선택된 콤보 인덱스
 
-/* ─────────────────────────────────────────
+/* ══════════════════════════════════════════
+   유틸
+══════════════════════════════════════════ */
+const $id      = id => document.getElementById(id);
+const getN     = id => parseFloat($id(id).value) || 0;
+const setV     = (id,v) => { $id(id).value = v; };
+const saveJSON = (k,v) => { try { localStorage.setItem(k,JSON.stringify(v)); } catch(e){} };
+const loadJSON = k    => { try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } };
+const esc      = s    => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const clonePieces = () => JSON.parse(JSON.stringify(pieces));
+
+/* ══════════════════════════════════════════
    초기화
-───────────────────────────────────────── */
+══════════════════════════════════════════ */
 function init() {
   // 컬러 피커
   const cp = $id('color-picker');
   COLORS.forEach(c => {
     const d = document.createElement('div');
-    d.className = 'color-dot' + (c === selColor ? ' selected' : '');
-    d.style.background = c;
-    d.dataset.color = c;
+    d.className = 'color-dot'+(c===selColor?' selected':'');
+    d.style.background=c; d.dataset.color=c;
     d.onclick = () => setColor(c);
     cp.appendChild(d);
   });
 
-  // 저장된 원단 설정 불러오기
-  const f = loadJSON(LS_FABRIC);
-  if (f) { setVal('fabric-w', f.w); setVal('fabric-len', f.l); setVal('kalbab', f.k); }
+  // 원단 설정 복원
+  const f = loadJSON(LS.FABRIC);
+  if (f) {
+    if (f.w)     setV('fabric-w',f.w);
+    if (f.t)     setV('fabric-total',f.t);
+    if (f.b)     setV('board-len',f.b);
+    if (f.k!=null) setV('kalbab',f.k);
+    if (f.ne)  { $id('nubi-enabled').checked=f.ne; toggleNubi(); }
+    if (f.nf!=null) setV('nubi-fabric',f.nf);
+    if (f.nt!=null) setV('nubi-thread',f.nt);
+  }
 
-  // 입력 이벤트
-  ['fabric-w','fabric-len','kalbab'].forEach(id =>
-    $id(id).addEventListener('input', () => { persistFabric(); })
+  // 조각 복원
+  const savedP = loadJSON(LS.PIECES);
+  if (savedP && savedP.length) {
+    pieces = savedP;
+    nextId = Math.max(...pieces.map(p=>p.id))+1;
+  }
+
+  // 입력 → 자동저장
+  ['fabric-w','fabric-total','board-len','kalbab','nubi-fabric','nubi-thread'].forEach(id =>
+    $id(id).addEventListener('input', () => { persistFabric(); updateNubiUI(); })
   );
 
   renderFabricPresets();
-  renderSavedSizes();
-  renderPresets();
-  renderItems();
+  renderSizePresets();
+  renderSetPresets();
+
+  // 레이아웃 모드 복원
+  const savedMode = localStorage.getItem('jdLayoutMode') || 'auto';
+  layoutMode = savedMode;
+  applyModeUI();
+  renderPiecesList();
 }
 
-/* ─────────────────────────────────────────
+function persistFabric() {
+  saveJSON(LS.FABRIC,{
+    w:getN('fabric-w'), t:getN('fabric-total'), b:getN('board-len'), k:getN('kalbab'),
+    ne:$id('nubi-enabled').checked, nf:getN('nubi-fabric'), nt:getN('nubi-thread')
+  });
+}
+function persistPieces() { saveJSON(LS.PIECES, pieces); }
+
+/* ══════════════════════════════════════════
    탭 전환
-───────────────────────────────────────── */
+══════════════════════════════════════════ */
 function showTab(name) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  $id('tab-' + name).classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  $id('tab-'+name).classList.add('active');
   document.querySelector(`[data-tab="${name}"]`).classList.add('active');
-  if (name === 'analysis') renderAnalysis();
-  if (name === 'yossuk')   { renderYossuk(); redraw(); }
+  if (name==='analysis') renderAnalysis();
+  if (name==='yossuk')   renderYossuk();
 }
 
-/* ─────────────────────────────────────────
-   색상 선택
-───────────────────────────────────────── */
+/* ══════════════════════════════════════════
+   컬러 선택
+══════════════════════════════════════════ */
 function setColor(c) {
-  selColor = c;
-  document.querySelectorAll('.color-dot').forEach(d =>
-    d.classList.toggle('selected', d.dataset.color === c)
-  );
+  selColor=c;
+  document.querySelectorAll('.color-dot').forEach(d=>d.classList.toggle('selected',d.dataset.color===c));
 }
 
-/* ─────────────────────────────────────────
-   원단 설정
-───────────────────────────────────────── */
-function getFabric() {
-  return {
-    w: parseFloat($id('fabric-w').value)   || 162,
-    l: parseFloat($id('fabric-len').value) || 800,
-    k: parseFloat($id('kalbab').value)     || 0
-  };
+/* ══════════════════════════════════════════
+   조각 관리
+══════════════════════════════════════════ */
+function addPiece() {
+  const name  = $id('new-name').value.trim() || ('조각'+(nextId));
+  const W     = getN('new-w'), H = getN('new-h');
+  if (!W||!H) { alert('W와 H를 입력해주세요.'); return; }
+  let stand = 0, lie = 0;
+  if (layoutMode === 'manual') {
+    stand = Math.max(0, parseInt($id('new-stand').value)||0);
+    lie   = Math.max(0, parseInt($id('new-lie').value)||0);
+  }
+  pieces.push({id:nextId++, name, W, H, standCols:stand, lyingCols:lie, color:selColor, lossPerChange:1});
+  persistPieces();
+  // 자동 모드면 분석 결과 초기화
+  if (layoutMode === 'auto') { autoCombos=[]; selComboIdx=-1; $id('auto-combo-results').innerHTML=''; }
+  renderPiecesList();
+  $id('new-name').value=''; $id('new-w').value=''; $id('new-h').value='';
+  $id('new-stand').value='1'; $id('new-lie').value='0';
+  setColor(COLORS[(COLORS.indexOf(selColor)+1)%COLORS.length]);
 }
-function persistFabric() { saveJSON(LS_FABRIC, getFabric()); }
 
+function removePiece(id) {
+  pieces = pieces.filter(p=>p.id!==id);
+  persistPieces();
+  if (layoutMode==='auto') { autoCombos=[]; selComboIdx=-1; $id('auto-combo-results').innerHTML=''; }
+  renderPiecesList(); updateNubiUI();
+}
+
+function updateStand(id,val) {
+  const p=pieces.find(p=>p.id===id); if(!p) return;
+  p.standCols=Math.max(0,parseInt(val)||0);
+  persistPieces(); renderWidthBar(); updateNubiUI();
+}
+function updateLie(id,val) {
+  const p=pieces.find(p=>p.id===id); if(!p) return;
+  p.lyingCols=Math.max(0,parseInt(val)||0);
+  persistPieces(); renderWidthBar(); updateNubiUI();
+}
+// updateLoss 제거됨 — 누비 로스는 열수 기준 자동 계산
+
+function renderPiecesList() {
+  const list = $id('pieces-list');
+  if (!pieces.length) {
+    list.innerHTML='<div class="empty" style="padding:12px 0">아직 추가된 조각이 없습니다.</div>';
+    $id('width-bar-wrap').style.display='none';
+    updateNubiUI(); return;
+  }
+  const showCols = (layoutMode === 'manual');
+  list.innerHTML = pieces.map(p=>`
+    <div class="piece-row">
+      <div class="piece-swatch" style="background:${p.color}"></div>
+      <div class="piece-info">
+        <div class="piece-name-lbl">${esc(p.name)}</div>
+        <div class="piece-size-lbl">${p.W}×${p.H}cm${showCols&&(p.standCols||p.lyingCols)?` <span style="color:var(--muted);font-size:0.68rem">${p.standCols?p.standCols+'세':''}${p.lyingCols?p.lyingCols+'눕':''}</span>`:''}</div>
+      </div>
+      ${showCols?`
+      <div class="piece-cols">
+        <div class="col-group">
+          <div class="col-lbl">세움</div>
+          <input class="col-inp" type="number" value="${p.standCols}" min="0"
+            oninput="updateStand(${p.id},this.value)">
+        </div>
+        <div class="col-group">
+          <div class="col-lbl">눕힘</div>
+          <input class="col-inp" type="number" value="${p.lyingCols}" min="0"
+            oninput="updateLie(${p.id},this.value)">
+        </div>
+      </div>`:''}
+      <button class="piece-del" onclick="removePiece(${p.id})">×</button>
+    </div>`).join('');
+  renderWidthBar();
+  updateNubiUI();
+}
+
+function renderWidthBar() {
+  const fW=getN('fabric-w');
+  const cols=getColumnTypes();
+  const used=cols.reduce((s,c)=>s+c.width*c.count,0);
+  const waste=fW-used;
+  if (!fW||!pieces.length) { $id('width-bar-wrap').style.display='none'; return; }
+  $id('width-bar-wrap').style.display='block';
+  const pct=v=>(v/fW*100).toFixed(1)+'%';
+  const segs=cols.map(c=>{
+    const w=c.width*c.count;
+    const lbl=w>fW*0.08?`${c.width}×${c.count}`:'';
+    return `<div class="width-bar-seg" style="width:${pct(w)};background:${c.color}">${esc(lbl)}</div>`;
+  }).join('');
+  const wasteBar=waste>0?`<div class="width-bar-waste" style="width:${pct(waste)}"></div>`:'';
+  $id('width-bar-track').innerHTML=segs+wasteBar;
+  const cls=used>fW?'width-over':waste<=3?'width-ok':'width-warn';
+  const formula=cols.map(c=>`${c.width}×${c.count}`).join('+');
+  $id('width-summary').innerHTML=`
+    <span>${formula} = <strong>${used}cm</strong></span>
+    <span class="${cls}">${used>fW?`초과 ${used-fW}cm ⚠️`:waste===0?'딱 맞음 ✅':`낭비 ${waste}cm${waste<=3?' ✅':''}`}</span>`;
+}
+
+/* ══════════════════════════════════════════
+   누비 UI
+══════════════════════════════════════════ */
+function toggleNubi() {
+  $id('nubi-fields').style.display=$id('nubi-enabled').checked?'block':'none';
+  persistFabric(); updateNubiUI();
+}
+function updateNubiUI() {
+  if (!$id('nubi-enabled').checked) return;
+  const rows=$id('nubi-piece-rows');
+  if (!pieces.length) { rows.innerHTML='<div class="hint">조각을 먼저 추가해주세요.</div>'; return; }
+  const total=getN('nubi-fabric')+getN('nubi-thread');
+  rows.innerHTML=pieces.map(p=>{
+    const cols=p.standCols+p.lyingCols;
+    const loss=total*cols;
+    const colNote=cols>0
+      ? `(${[p.standCols?p.standCols+'세운':'',p.lyingCols?p.lyingCols+'눕힘':''].filter(Boolean).join('+')})`
+      : '<span style="color:var(--danger)">열수 미설정</span>';
+    return `<div class="nubi-piece-row">
+      <div>
+        <div class="nubi-piece-name" style="color:${p.color}">${esc(p.name)}</div>
+        <div class="nubi-piece-sz">${p.W}×${p.H}cm &nbsp;${colNote}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:0.88rem;font-weight:800;color:var(--danger)">-${loss}장</div>
+        <div style="font-size:0.65rem;color:var(--muted)">${total}회×${cols}열</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════
+   프리셋 관리
+══════════════════════════════════════════ */
 function saveFabricPreset() {
-  const name = $id('fabric-preset-name').value.trim();
-  if (!name) { alert('원단 설정 이름을 입력해주세요.'); return; }
-  const list = loadJSON(LS_FABRIC_PRESET) || [];
-  const f = getFabric();
-  list.push({ name, w: f.w, l: f.l, k: f.k });
-  saveJSON(LS_FABRIC_PRESET, list);
-  $id('fabric-preset-name').value = '';
-  renderFabricPresets();
+  const name=$id('fabric-preset-name').value.trim();
+  if (!name) { alert('이름을 입력해주세요.'); return; }
+  const list=loadJSON(LS.FABRIC_PRE)||[];
+  list.push({name,w:getN('fabric-w'),t:getN('fabric-total'),b:getN('board-len'),k:getN('kalbab')});
+  saveJSON(LS.FABRIC_PRE,list); $id('fabric-preset-name').value=''; renderFabricPresets();
 }
-
+function renderFabricPresets() {
+  const list=loadJSON(LS.FABRIC_PRE)||[];
+  $id('fabric-preset-area').style.display=list.length?'block':'none';
+  $id('fabric-preset-chips').innerHTML=list.map((p,i)=>`
+    <span class="preset-chip" onclick="loadFabricPreset(${i})">${esc(p.name)}
+      <span class="p-del" onclick="event.stopPropagation();delFabricPreset(${i})">✕</span>
+    </span>`).join('');
+}
 function loadFabricPreset(i) {
-  const list = loadJSON(LS_FABRIC_PRESET) || [];
-  const p = list[i];
-  if (!p) return;
-  setVal('fabric-w', p.w); setVal('fabric-len', p.l); setVal('kalbab', p.k);
+  const p=(loadJSON(LS.FABRIC_PRE)||[])[i]; if(!p) return;
+  setV('fabric-w',p.w); setV('fabric-total',p.t); setV('board-len',p.b); setV('kalbab',p.k);
   persistFabric();
 }
-
-function deleteFabricPreset(i) {
-  const list = loadJSON(LS_FABRIC_PRESET) || [];
-  list.splice(i, 1);
-  saveJSON(LS_FABRIC_PRESET, list);
-  renderFabricPresets();
+function delFabricPreset(i) {
+  const list=loadJSON(LS.FABRIC_PRE)||[]; list.splice(i,1); saveJSON(LS.FABRIC_PRE,list); renderFabricPresets();
 }
 
-function renderFabricPresets() {
-  const list = loadJSON(LS_FABRIC_PRESET) || [];
-  const area = $id('fabric-preset-area');
-  const chips = $id('fabric-preset-chips');
-  if (!list.length) { area.style.display = 'none'; return; }
-  area.style.display = 'block';
-  chips.innerHTML = list.map((p, i) => `
-    <div class="sz-chip">
-      <span onclick="loadFabricPreset(${i})">${esc(p.name)} (${p.w}×${p.l})</span>
-      <span class="del" onclick="deleteFabricPreset(${i})">✕</span>
-    </div>
-  `).join('');
+// 단일 사이즈 즐겨찾기
+function quickSaveSize() {
+  const W=getN('new-w'), H=getN('new-h');
+  if (!W||!H) { alert('W, H를 입력하세요.'); return; }
+  const name=$id('new-name').value.trim()||`${W}×${H}`;
+  const list=loadJSON(LS.SIZE_FAVE)||[];
+  list.push({name,W,H,stand:parseInt($id('new-stand').value)||1,lie:parseInt($id('new-lie').value)||0,color:selColor});
+  saveJSON(LS.SIZE_FAVE,list); renderSizePresets();
+}
+function renderSizePresets() {
+  const list=loadJSON(LS.SIZE_FAVE)||[];
+  $id('size-preset-area').style.display=list.length?'block':'none';
+  $id('size-preset-chips').innerHTML=list.map((p,i)=>`
+    <span class="preset-chip" onclick="loadSizePreset(${i})">${esc(p.name)} <small style="color:var(--muted)">${p.W}×${p.H}</small>
+      <span class="p-del" onclick="event.stopPropagation();delSizePreset(${i})">✕</span>
+    </span>`).join('');
+}
+function loadSizePreset(i) {
+  const p=(loadJSON(LS.SIZE_FAVE)||[])[i]; if(!p) return;
+  setV('new-name',p.name); setV('new-w',p.W); setV('new-h',p.H);
+  setV('new-stand',p.stand??1); setV('new-lie',p.lie??0);
+  if (p.color) setColor(p.color);
+}
+function delSizePreset(i) {
+  const list=loadJSON(LS.SIZE_FAVE)||[]; list.splice(i,1); saveJSON(LS.SIZE_FAVE,list); renderSizePresets();
 }
 
-/* ─────────────────────────────────────────
-   아이템 추가 / 삭제
-───────────────────────────────────────── */
-function addItem() {
-  const name  = $id('item-name').value.trim() || `조각${nextId}`;
-  const w     = parseFloat($id('item-w').value);
-  const h     = parseFloat($id('item-h').value);
-  const count = Math.max(1, parseInt($id('item-cnt').value) || 1);
-  if (!w || !h || w <= 0 || h <= 0) { alert('가로/세로 사이즈를 입력해주세요.'); return; }
-
-  if ($id('do-save-sz').checked) addSavedSize(name, w, h);
-
-  const usedColors = items.map(i => i.color);
-  let color = selColor;
-  if (usedColors.includes(color)) {
-    const next = COLORS.find(c => !usedColors.includes(c));
-    if (next) { color = next; setColor(next); }
-  }
-
-  items.push({ id: nextId++, name, width: w, height: h, count, color });
-  $id('item-name').value = ''; $id('item-w').value = ''; $id('item-h').value = ''; $id('item-cnt').value = 1; $id('do-save-sz').checked = false;
-  renderItems();
+// 현재 조각 목록 즐겨찾기
+function savePieceListPreset() {
+  const name=$id('size-preset-name').value.trim();
+  if (!name) { alert('이름을 입력하세요.'); return; }
+  if (!pieces.length) { alert('조각을 먼저 추가하세요.'); return; }
+  const list=loadJSON(LS.PIECE_LIST_PRE)||[];
+  list.push({name, pieces:clonePieces()});
+  saveJSON(LS.PIECE_LIST_PRE,list); $id('size-preset-name').value='';
 }
 
-function deleteItem(id) { items = items.filter(i => i.id !== id); renderItems(); }
-
-function renderItems() {
-  const el = $id('items-list');
-  if (!items.length) { el.innerHTML = '<div class="empty">재단 사이즈를 추가해주세요</div>'; return; }
-  el.innerHTML = items.map(it => `
-    <div class="item-row" style="border-left-color:${it.color}">
-      <div class="item-swatch" style="background:${it.color}"></div>
-      <div class="item-info">
-        <div class="item-name">${esc(it.name)}</div>
-        <div class="item-size">${it.width} × ${it.height} cm</div>
-      </div>
-      <div class="item-cnt">×${it.count}장</div>
-      <button class="item-del" onclick="deleteItem(${it.id})">✕</button>
-    </div>
-  `).join('');
+// 세트 프리셋 (원단+조각+누비 전체)
+function saveSetPreset() {
+  const name=$id('set-preset-name').value.trim();
+  if (!name) { alert('이름을 입력하세요.'); return; }
+  const list=loadJSON(LS.SET_PRE)||[];
+  list.push({
+    name,
+    pieces: clonePieces(),
+    fabric: {w:getN('fabric-w'),t:getN('fabric-total'),b:getN('board-len'),k:getN('kalbab')},
+    nubi:   {ne:$id('nubi-enabled').checked, nf:getN('nubi-fabric'), nt:getN('nubi-thread')}
+  });
+  saveJSON(LS.SET_PRE,list); $id('set-preset-name').value=''; renderSetPresets();
+}
+function renderSetPresets() {
+  const list=loadJSON(LS.SET_PRE)||[];
+  const chips=$id('set-preset-chips');
+  if (!list.length) { chips.innerHTML='<div class="empty" style="width:100%;padding:8px 0">저장된 세트가 없습니다</div>'; return; }
+  chips.innerHTML=list.map((p,i)=>`
+    <span class="preset-chip" onclick="loadSetPreset(${i})">${esc(p.name)}
+      <span class="p-del" onclick="event.stopPropagation();delSetPreset(${i})">✕</span>
+    </span>`).join('');
+}
+function loadSetPreset(i) {
+  const s=(loadJSON(LS.SET_PRE)||[])[i]; if(!s) return;
+  pieces=JSON.parse(JSON.stringify(s.pieces));
+  nextId=pieces.length?Math.max(...pieces.map(p=>p.id))+1:1;
+  if (s.fabric) { setV('fabric-w',s.fabric.w); setV('fabric-total',s.fabric.t); setV('board-len',s.fabric.b); setV('kalbab',s.fabric.k); }
+  if (s.nubi)   { $id('nubi-enabled').checked=s.nubi.ne; toggleNubi(); setV('nubi-fabric',s.nubi.nf); setV('nubi-thread',s.nubi.nt); }
+  persistPieces(); persistFabric(); renderPiecesList();
+}
+function delSetPreset(i) {
+  const list=loadJSON(LS.SET_PRE)||[]; list.splice(i,1); saveJSON(LS.SET_PRE,list); renderSetPresets();
 }
 
-/* ─────────────────────────────────────────
-   저장된 사이즈
-───────────────────────────────────────── */
-function getSavedSizes() { return loadJSON(LS_SIZES) || []; }
-function addSavedSize(name, w, h) {
-  const list = getSavedSizes();
-  if (!list.find(s => s.w === w && s.h === h)) { list.push({ name, w, h }); saveJSON(LS_SIZES, list); renderSavedSizes(); }
-}
-function deleteSavedSize(i) { const list = getSavedSizes(); list.splice(i, 1); saveJSON(LS_SIZES, list); renderSavedSizes(); }
-function loadSavedSize(i) {
-  const sz = getSavedSizes()[i]; if (!sz) return;
-  $id('item-name').value = sz.name; $id('item-w').value = sz.w; $id('item-h').value = sz.h; $id('item-cnt').value = 1;
-}
-function renderSavedSizes() {
-  const list = getSavedSizes();
-  const area = $id('saved-sz-area'), row = $id('saved-sz-chips');
-  if (!list.length) { area.style.display = 'none'; return; }
-  area.style.display = 'block';
-  row.innerHTML = list.map((sz, i) => `
-    <div class="sz-chip">
-      <span onclick="loadSavedSize(${i})">${esc(sz.name)} (${sz.w}×${sz.h})</span>
-      <span class="del" onclick="deleteSavedSize(${i})">✕</span>
-    </div>
-  `).join('');
+/* ══════════════════════════════════════════
+   모드 전환
+══════════════════════════════════════════ */
+function setLayoutMode(mode) {
+  layoutMode = mode;
+  localStorage.setItem('jdLayoutMode', mode);
+  applyModeUI();
+  // 모드 변경 시 col 입력 초기화 (auto→manual은 0인 채로 유지, manual→auto도 무방)
+  renderPiecesList();
 }
 
-/* ─────────────────────────────────────────
-   세트 저장
-───────────────────────────────────────── */
-function getPresets() { return loadJSON(LS_PRESETS) || []; }
-function savePreset() {
-  const name = $id('preset-name-inp').value.trim();
-  if (!name) { alert('세트 이름을 입력해주세요.'); return; }
-  if (!items.length) { alert('재단 사이즈를 먼저 추가해주세요.'); return; }
-  const list = getPresets();
-  list.push({ name, items: JSON.parse(JSON.stringify(items)), fabric: getFabric() });
-  saveJSON(LS_PRESETS, list);
-  $id('preset-name-inp').value = '';
-  renderPresets();
-}
-function loadPreset(i) {
-  const p = getPresets()[i]; if (!p) return;
-  items = p.items.map(it => ({ ...it }));
-  nextId = Math.max(0, ...items.map(it => it.id)) + 1;
-  if (p.fabric) { setVal('fabric-w', p.fabric.w); setVal('fabric-len', p.fabric.l); setVal('kalbab', p.fabric.k); persistFabric(); }
-  renderItems(); renderPresets();
-}
-function deletePreset(i) { const list = getPresets(); list.splice(i, 1); saveJSON(LS_PRESETS, list); renderPresets(); }
-function renderPresets() {
-  const list = getPresets();
-  const row = $id('preset-row');
-  if (!list.length) { row.innerHTML = '<div class="empty">저장된 세트가 없습니다</div>'; return; }
-  row.innerHTML = list.map((p, i) => `
-    <div class="preset-chip">
-      <span onclick="loadPreset(${i})">${esc(p.name)}</span>
-      <span class="p-del" onclick="deletePreset(${i})">✕</span>
-    </div>
-  `).join('');
+function applyModeUI() {
+  const isAuto = layoutMode === 'auto';
+  $id('mode-btn-auto').classList.toggle('active', isAuto);
+  $id('mode-btn-manual').classList.toggle('active', !isAuto);
+  // 추가 폼: auto=W/H만, manual=W/H+세움/눕힘
+  $id('form-wh-row').className  = isAuto ? 'grid-2' : 'grid-2';
+  $id('form-cols-row').style.display = isAuto ? 'none' : '';
+  // 힌트 텍스트
+  $id('mode-hint').innerHTML = isAuto
+    ? '💡 사이즈를 추가한 뒤 <strong>폭 배치 분석</strong> 버튼을 눌러 최적 조합을 선택하세요.'
+    : '💡 세운열: W폭 배치 → 길이방향 H간격 &nbsp;|&nbsp; 눕힌열: H폭 배치 → 길이방향 W간격';
+  // auto 분석 영역
+  $id('auto-combo-area').style.display = isAuto ? 'block' : 'none';
 }
 
-/* ─────────────────────────────────────────
-   분석 알고리즘
-───────────────────────────────────────── */
-// 길이 배열: 특정 치수의 배수들
-function getMultiples(dim, maxLen) {
-  const r = [];
-  for (let m = dim; m <= maxLen; m += dim) r.push(m);
-  return r;
-}
+/* ══════════════════════════════════════════
+   자동 폭 배치 분석
+══════════════════════════════════════════ */
+/** 주어진 조각 목록에서 원단폭에 맞는 모든 열 조합 탐색
+ *  각 조각은 반드시 stand+lie >= 1 열 이상 가져야 함
+ *  반환: [{cols:[{pieceId,pieceName,W,H,stand,lie}...], usedWidth, waste}] waste 오름차순
+ */
+function findWidthCombos(pcs, fabricWidth) {
+  if (!pcs.length || !fabricWidth) return [];
+  const results = [];
 
-// 폭 배치 조합: n*W + m*H <= fabricW 인 모든 조합
-function getWidthCombos(W, H, fabricW) {
-  const combos = [];
-  const maxN = Math.floor(fabricW / W);
-  const maxM = Math.floor(fabricW / H);
-  for (let n = 0; n <= maxN; n++) {
-    for (let m = 0; m <= maxM; m++) {
-      if (!n && !m) continue;
-      const used = n * W + m * H;
-      if (used <= fabricW) {
-        const parts = [];
-        if (n) parts.push(`${n}×${W}`);
-        if (m && H !== W) parts.push(`${m}×${H}`);
-        else if (m && H === W) parts.push(`${m}×${H}`);
-        // 행 높이: n장은 W를 폭으로 쓰므로 높이=H, m장은 H를 폭으로 쓰므로 높이=W
-        const rowH = Math.max(n > 0 ? H : 0, m > 0 ? W : 0);
-        combos.push({ n, m, total: n + m, used, waste: fabricW - used,
-          formula: parts.join(' + ') + ` = ${used}cm`,
-          rowH
-        });
+  function enumerate(idx, colSoFar, usedW) {
+    if (idx === pcs.length) {
+      results.push({cols: colSoFar.map(c=>({...c})), usedWidth: usedW, waste: fabricWidth - usedW});
+      return;
+    }
+    const p = pcs[idx];
+    const rem = fabricWidth - usedW;
+    const maxS = Math.floor(rem / p.W);
+    for (let s = 0; s <= maxS; s++) {
+      const afterS = rem - s * p.W;
+      const maxL = Math.floor(afterS / p.H);
+      for (let l = 0; l <= maxL; l++) {
+        if (s === 0 && l === 0) continue; // 최소 1열 이상
+        colSoFar.push({pieceId:p.id, pieceName:p.name, W:p.W, H:p.H, stand:s, lie:l});
+        enumerate(idx + 1, colSoFar, usedW + s * p.W + l * p.H);
+        colSoFar.pop();
       }
     }
   }
-  // 중복 제거 (W=H인 경우 n*W + m*W = (n+m)*W이 중복될 수 있음)
-  const seen = new Set();
-  return combos.filter(c => {
-    const key = `${c.n}_${c.m}`;
-    if (seen.has(key)) return false;
-    seen.add(key); return true;
-  }).sort((a, b) => b.total - a.total || a.waste - b.waste).slice(0, 10);
+
+  enumerate(0, [], 0);
+  return results
+    .sort((a,b) => a.waste - b.waste || b.cols.reduce((s,c)=>s+c.stand+c.lie,0) - a.cols.reduce((s,c)=>s+c.stand+c.lie,0))
+    .slice(0, 30);
 }
 
-// 한 아이템의 전체 분석
-function analyzeItem(item, fabricW, usableLen) {
-  const W = item.width, H = item.height;
+function runAutoAnalysis() {
+  const fW = getN('fabric-w');
+  if (!fW) { alert('원단 폭을 먼저 입력해주세요.'); return; }
+  if (!pieces.length) { alert('조각을 먼저 추가해주세요.'); return; }
+  autoCombos = findWidthCombos(pieces, fW);
+  selComboIdx = autoCombos.length ? 0 : -1;
+  if (!autoCombos.length) {
+    $id('auto-combo-results').innerHTML = '<div class="hint" style="color:var(--danger)">⚠️ 원단 폭에 맞는 배치 조합이 없습니다. 원단 폭을 확인해주세요.</div>';
+    return;
+  }
+  renderAutoCombos();
+  // 첫 번째(최적) 조합 자동 적용
+  applyAutoCombo(0);
+}
 
-  // Option A: W 방향으로 폭 배치, H가 행 높이
-  const A = { label: `${W}cm 폭 기준 (${H}cm 행)`, across: W, rowH: H };
-  A.perRow  = Math.floor(fabricW / W);
-  A.wasteW  = fabricW - A.perRow * W;
-  A.rows    = Math.floor(usableLen / H);
-  A.rem     = usableLen % H;    // 난단 길이
-  A.total   = A.rows * A.perRow;
+function renderAutoCombos() {
+  const fW = getN('fabric-w');
+  const minWaste = autoCombos[0]?.waste ?? 0;
+  const html = autoCombos.map((c,i) => {
+    const isBest = c.waste === minWaste;
+    const isSel  = i === selComboIdx;
+    const chipCls = isSel ? 'combo-item sel-combo' : (isBest && i===0 ? 'combo-item best-combo' : 'combo-item');
+    const badgeCls = c.waste === 0 ? 'combo-badge combo-badge-ok' : c.waste <= 3 ? 'combo-badge combo-badge-ok' : 'combo-badge combo-badge-warn';
+    const badgeTxt = c.waste === 0 ? '딱 맞음 ✅' : `낭비 ${c.waste}cm${c.waste<=3?' ✅':''}`;
+    const formula  = c.cols.map(col => {
+      const parts = [];
+      if (col.stand > 0) parts.push(`<span style="color:${pieces.find(p=>p.id===col.pieceId)?.color||'#fff'};font-weight:700">${esc(col.pieceName)}</span> ${col.stand}세운`);
+      if (col.lie   > 0) parts.push(`<span style="color:${pieces.find(p=>p.id===col.pieceId)?.color||'#fff'};font-weight:700">${esc(col.pieceName)}</span> ${col.lie}눕힘`);
+      return parts.join(' + ');
+    }).join(' &nbsp;+&nbsp; ');
+    const detail = c.cols.map(col => {
+      const p = pieces.find(p=>p.id===col.pieceId);
+      const segs = [];
+      if (col.stand > 0) segs.push(`${p.W}×${col.stand}=${p.W*col.stand}cm`);
+      if (col.lie   > 0) segs.push(`${p.H}×${col.lie}=${p.H*col.lie}cm`);
+      return segs.join('+');
+    }).join('+') + `=${c.usedWidth}cm`;
+    return `<div class="${chipCls}" onclick="applyAutoCombo(${i})">
+      <div class="combo-formula">${formula}<small>${detail} / ${fW}cm</small></div>
+      <div class="${badgeCls}">${isBest&&i===0?'최적':''} ${badgeTxt}</div>
+    </div>`;
+  }).join('');
+  $id('auto-combo-results').innerHTML = `
+    <div style="font-size:0.7rem;color:var(--muted);font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">
+      ${autoCombos.length}개 조합 발견 — 탭하여 적용
+    </div>
+    <div class="combo-list">${html}</div>`;
+}
 
-  // Option B: H 방향으로 폭 배치, W가 행 높이
-  const B = { label: `${H}cm 폭 기준 (${W}cm 행)`, across: H, rowH: W };
-  B.perRow  = Math.floor(fabricW / H);
-  B.wasteW  = fabricW - B.perRow * H;
-  B.rows    = Math.floor(usableLen / W);
-  B.rem     = usableLen % W;
-  B.total   = B.rows * B.perRow;
+function applyAutoCombo(idx) {
+  const combo = autoCombos[idx];
+  if (!combo) return;
+  selComboIdx = idx;
+  // 조각별 열수 반영
+  combo.cols.forEach(c => {
+    const p = pieces.find(p=>p.id===c.pieceId);
+    if (p) { p.standCols = c.stand; p.lyingCols = c.lie; }
+  });
+  persistPieces();
+  renderAutoCombos();        // 선택 표시 갱신
+  renderWidthBar();          // 폭 바 갱신
+  updateNubiUI();
+}
 
-  // 난단에서 회전 배치 가능 여부
-  // A의 난단(A.rem)에 B 방향(rowH=W) 피스가 들어가는지
-  A.remRows   = A.rem >= W ? Math.floor(A.rem / W) : 0;
-  A.remPieces = A.remRows * B.perRow;
-  A.totalAll  = A.total + A.remPieces;
+/* ══════════════════════════════════════════
+   핵심 알고리즘
+══════════════════════════════════════════ */
 
-  // B의 난단(B.rem)에 A 방향(rowH=H) 피스가 들어가는지
-  B.remRows   = B.rem >= H ? Math.floor(B.rem / H) : 0;
-  B.remPieces = B.remRows * A.perRow;
-  B.totalAll  = B.total + B.remPieces;
+/** 열 타입 배열: [{pieceId,pieceName,W,H,orient,count,width,cutInterval,color}] */
+function getColumnTypes() {
+  const cols=[];
+  pieces.forEach(p=>{
+    if (p.standCols>0) cols.push({pieceId:p.id,pieceName:p.name,W:p.W,H:p.H,orient:'stand',count:p.standCols,width:p.W,cutInterval:p.H,color:p.color});
+    if (p.lyingCols>0) cols.push({pieceId:p.id,pieceName:p.name,W:p.W,H:p.H,orient:'lie',  count:p.lyingCols,width:p.H,cutInterval:p.W,color:p.color});
+  });
+  return cols;
+}
 
-  const best = A.totalAll >= B.totalAll ? 'A' : 'B';
+/** 고유 간격 그룹: [{interval, groups:[colTypes...]}] */
+function getIntervalGroups(colTypes) {
+  const map=new Map();
+  colTypes.forEach(c=>{ if(!map.has(c.cutInterval)) map.set(c.cutInterval,[]); map.get(c.cutInterval).push(c); });
+  return Array.from(map.entries()).map(([interval,groups])=>({interval,groups}));
+}
 
-  // 필요 장수에 대한 최소 원단 계산
-  const bOpt = best === 'A' ? A : B;
-  const needed = item.count;
-  const rowsFor = Math.ceil(needed / bOpt.perRow);
-  const fabricFor = rowsFor * bOpt.rowH;
-  const produced = rowsFor * bOpt.perRow;
+/** 다중 간격 크로스컷 후보 (상위 20개) */
+function findCrossCutCandidates(intervals, boardLen) {
+  if (!intervals.length) return [];
+  if (intervals.length===1) {
+    const ci=intervals[0], maxX=Math.floor(boardLen/ci);
+    return Array.from({length:maxX},(_,i)=>({Xs:[maxX-i],syncLen:ci*(maxX-i),diff:0})).slice(0,15);
+  }
+  const maxXs=intervals.map(ci=>Math.floor(boardLen/ci));
+  const results=[];
 
-  // 폭 배치 조합
-  const combos = getWidthCombos(W, H, fabricW);
-
-  // 최적 폭 배치(waste 최소) 기준으로 길이 배열 계산
-  const bestC = combos[0] || null;
-  let bestLen = null;
-  if (bestC) {
-    const rowH = bestC.rowH;
-    const mults = getMultiples(rowH, usableLen);
-    const pans  = Math.floor(usableLen / rowH);
-    const nan   = usableLen % rowH;
-    // 난단에서 반대 방향으로 추가 재단 가능 여부
-    // rowH=H이면 메인은 W폭 배치(H높이) → 난단엔 H폭 배치(W높이) 시도
-    const altH  = rowH === H ? W : H;
-    const altPR = rowH === H ? Math.floor(fabricW / H) : Math.floor(fabricW / W);
-    const nanRows   = nan >= altH ? Math.floor(nan / altH) : 0;
-    const nanPieces = nanRows * altPR;
-    bestLen = { rowH, mults, pans, nan, nanRows, nanPieces, altH, altPR };
+  if (intervals.length===2) {
+    // 완전 탐색 O(maxX0 * maxX1)
+    for (let x0=1;x0<=maxXs[0];x0++) {
+      for (let x1=1;x1<=maxXs[1];x1++) {
+        const l0=intervals[0]*x0, l1=intervals[1]*x1;
+        const syncLen=Math.max(l0,l1);
+        if (syncLen>boardLen) continue;
+        results.push({Xs:[x0,x1],syncLen,diff:Math.abs(l0-l1)});
+      }
+    }
+  } else {
+    // 3개 이상: 앵커(첫 번째 간격) 기반
+    for (let x0=1;x0<=maxXs[0];x0++) {
+      const anchor=intervals[0]*x0;
+      const Xs=[x0]; let maxLen=anchor,minLen=anchor,ok=true;
+      for (let i=1;i<intervals.length;i++) {
+        const xi=Math.round(anchor/intervals[i]);
+        const cands=[xi-1,xi,xi+1].filter(x=>x>=1&&intervals[i]*x<=boardLen);
+        if (!cands.length){ok=false;break;}
+        const bxi=cands.reduce((a,b)=>Math.abs(intervals[i]*a-anchor)<=Math.abs(intervals[i]*b-anchor)?a:b);
+        Xs.push(bxi);
+        const li=intervals[i]*bxi;
+        maxLen=Math.max(maxLen,li); minLen=Math.min(minLen,li);
+      }
+      if (!ok||maxLen>boardLen) continue;
+      results.push({Xs:[...Xs],syncLen:maxLen,diff:maxLen-minLen});
+    }
   }
 
-  return { W, H, A, B, best, combos, bestLen, rowsFor, fabricFor, produced, needed };
+  return results
+    .sort((a,b)=>a.diff-b.diff||b.syncLen-a.syncLen)
+    .filter((r,i,arr)=>!arr.slice(0,i).some(r2=>r2.Xs.join(',')===r.Xs.join(',')))
+    .slice(0,20);
 }
 
-/* ─────────────────────────────────────────
-   분석 탭 렌더링
-───────────────────────────────────────── */
+/** 전체 요척 계산 */
+function calcAll(colTypes, igGroups, cross, totalLen, kalbab, nubiEnabled, nubiChanges) {
+  // interval → X 매핑
+  const ixMap=new Map();
+  igGroups.forEach((g,i)=>ixMap.set(g.interval,cross.Xs[i]));
+
+  const panelLen  = cross.syncLen+kalbab;
+  const numPanels = Math.floor(totalLen/panelLen);
+  const remnantLen= totalLen-numPanels*panelLen;
+
+  // 조각별 계산
+  const pr={};
+  pieces.forEach(p=>{ pr[p.id]={perPanel:0,remPcs:0,loss:0,subtotal:0,final:0}; });
+
+  colTypes.forEach(c=>{
+    const X=ixMap.get(c.cutInterval)||0;
+    pr[c.pieceId].perPanel += c.count*X;
+    pr[c.pieceId].remPcs   += Math.floor(remnantLen/c.cutInterval)*c.count;
+  });
+
+  pieces.forEach(p=>{
+    // 누비 로스: 교체 횟수 × 해당 조각의 총 열수 (세운+눕힌)
+    const cols = p.standCols + p.lyingCols;
+    pr[p.id].loss     = nubiEnabled ? nubiChanges * cols : 0;
+    pr[p.id].subtotal = numPanels*pr[p.id].perPanel + pr[p.id].remPcs;
+    pr[p.id].final    = pr[p.id].subtotal - pr[p.id].loss;
+  });
+
+  return {
+    panelLen, numPanels, remnantLen, pr,
+    grandFinal: pieces.reduce((s,p)=>s+pr[p.id].final,0),
+    grandSubtotal: pieces.reduce((s,p)=>s+pr[p.id].subtotal,0),
+    ixMap
+  };
+}
+
+/* ══════════════════════════════════════════
+   배치 분석 탭
+══════════════════════════════════════════ */
 function renderAnalysis() {
-  const f = getFabric();
-  const usableLen = f.l - f.k;
-  const container = $id('analysis-content');
+  const fW=getN('fabric-w'), bL=getN('board-len');
+  const container=$id('analysis-content');
+  if (!pieces.length) { container.innerHTML='<div class="empty">⚙️ 설정 탭에서 조각을 추가해주세요.</div>'; return; }
 
-  if (!items.length) {
-    container.innerHTML = '<div class="empty">⚙️ 설정 탭에서 원단과 재단 사이즈를 입력해주세요.</div>';
+  const colTypes=getColumnTypes();
+  if (!colTypes.length) { container.innerHTML='<div class="empty">세운 열 또는 눕힌 열을 1 이상 입력해주세요.</div>'; return; }
+
+  const usedW=colTypes.reduce((s,c)=>s+c.width*c.count,0);
+  const waste=fW-usedW;
+
+  if (usedW>fW) {
+    container.innerHTML=`<div class="card"><div style="color:var(--danger);font-weight:700;text-align:center;padding:10px">⚠️ 총 사용 폭 ${usedW}cm > 원단 폭 ${fW}cm<br>설정 탭에서 열 수를 줄여주세요.</div></div>`;
     return;
   }
 
-  container.innerHTML = items.map(item => {
-    const a = analyzeItem(item, f.w, usableLen);
+  const layoutRows=colTypes.map(c=>`
+    <tr>
+      <td><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${c.color};margin-right:5px;vertical-align:middle"></span>${esc(c.pieceName)}</td>
+      <td>${c.W}×${c.H}cm</td>
+      <td><span class="${c.orient==='stand'?'badge-stand':'badge-lie'}">${c.orient==='stand'?'세움':'눕힘'}</span></td>
+      <td style="font-weight:700;color:var(--primary)">${c.count}열</td>
+      <td>${c.width}cm</td>
+      <td style="color:var(--warning);font-weight:700">${c.cutInterval}cm</td>
+    </tr>`).join('');
 
-    // ① 폭 배치 조합 테이블 (행 높이 열 포함)
-    const minWaste = a.combos.length ? Math.min(...a.combos.map(x => x.waste)) : Infinity;
-    const combosHtml = a.combos.map(c => {
-      const isBest = c.waste === minWaste;
-      const wCls   = c.waste <= 3 ? 'td-waste-good' : c.waste <= 10 ? 'td-waste-ok' : '';
-      return `
-        <tr class="${isBest ? 'best-row' : ''}">
-          <td>${c.formula}${isBest ? ' <span style="color:var(--success);font-size:0.7rem">★최적</span>' : ''}</td>
-          <td class="td-qty">${c.total}장</td>
-          <td class="${wCls}">${c.waste}cm</td>
-          <td style="color:var(--primary);font-weight:700">${c.rowH}cm</td>
-        </tr>
-      `;
-    }).join('');
+  const igGroups=getIntervalGroups(colTypes);
+  const intervals=igGroups.map(g=>g.interval);
+  const candidates=findCrossCutCandidates(intervals,bL);
+  const savedIdx=Math.min(loadJSON(LS.SEL_CROSS)??0, Math.max(0,candidates.length-1));
+  const bestDiff=candidates[0]?.diff??0;
 
-    // ② 최적 폭 조합 기준 길이 배열
-    let lenSectionHtml = '';
-    if (a.bestLen) {
-      const bl = a.bestLen;
-      const multsHtml = bl.mults.map(v => {
-        const cls = v === usableLen ? 'exact'
-                  : Math.abs(v - usableLen) <= usableLen * 0.05 ? 'near' : '';
-        return `<span class="mult-chip ${cls}">${v}</span>`;
-      }).join('');
-
-      const nanInfo = bl.nan === 0
-        ? `<span style="color:var(--success)">✔ 난단 없음 — ${usableLen}cm가 ${bl.rowH}cm 행의 배수</span>`
-        : bl.nanPieces > 0
-          ? `난단 <strong style="color:var(--warning)">${bl.nan}cm</strong> → 반대 방향(${bl.altH}cm 행) ${bl.nanRows}행 × ${bl.altPR}장 = <strong style="color:var(--success)">${bl.nanPieces}장</strong> 추가 재단 가능`
-          : `난단 <strong style="color:var(--warning)">${bl.nan}cm</strong> → 최소 행 높이(${bl.altH}cm) 미달, 추가 재단 불가`;
-
-      lenSectionHtml = `
-        <div class="divider"></div>
-        <div class="a-section">
-          <div class="a-label">📏 길이 배열
-            <span style="font-weight:400;text-transform:none;letter-spacing:0">
-              — 최적 폭 배치(${a.combos[0]?.formula}) 기준, 행 높이 <strong style="color:var(--primary)">${bl.rowH}cm</strong>
-            </span>
-          </div>
-          <div class="mult-row" style="margin-bottom:10px">
-            ${multsHtml || '<span class="mult-chip">해당 없음</span>'}
-          </div>
-          <div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap">
-            <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:8px 14px;text-align:center;min-width:70px">
-              <div style="font-size:1.3rem;font-weight:800;color:var(--success)">${bl.pans}판</div>
-              <div style="font-size:0.66rem;color:var(--muted);margin-top:2px">완전 행</div>
-            </div>
-            <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:8px 14px;text-align:center;min-width:70px">
-              <div style="font-size:1.3rem;font-weight:800;color:${bl.nan===0?'var(--success)':'var(--warning)'}">${bl.nan}cm</div>
-              <div style="font-size:0.66rem;color:var(--muted);margin-top:2px">난단</div>
-            </div>
-            <div style="background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:8px 14px;text-align:center;min-width:70px">
-              <div style="font-size:1.3rem;font-weight:800;color:var(--primary)">${bl.pans * a.combos[0].total + bl.nanPieces}장</div>
-              <div style="font-size:0.66rem;color:var(--muted);margin-top:2px">총 생산</div>
-            </div>
-          </div>
-          <div style="font-size:0.78rem;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.2);border-radius:8px;padding:9px 11px;line-height:1.6">${nanInfo}</div>
-          <div class="hint" style="margin-top:6px">🟢 정확히 맞음 &nbsp;🟡 5% 이내 근접</div>
-        </div>
-      `;
-    }
-
-    return `
-      <div class="analysis-card" style="border-left-color:${item.color}">
-        <div class="card-title" style="color:${item.color}">■ ${esc(item.name)} &nbsp;${item.width}×${item.height}cm &nbsp;×${item.count}장</div>
-
-        <div class="a-section">
-          <div class="a-label">📐 폭 배치 조합 &nbsp;<span style="font-weight:400;text-transform:none;letter-spacing:0">(원단 폭 ${f.w}cm)</span></div>
-          <table class="combo-table">
-            <thead><tr><th>배치 조합</th><th>수량</th><th>낭비</th><th>행 높이</th></tr></thead>
-            <tbody>${combosHtml || '<tr><td colspan="4" style="color:var(--muted);padding:10px">조합 없음</td></tr>'}</tbody>
-          </table>
-        </div>
-
-        ${lenSectionHtml}
-      </div>
-    `;
+  const crossChips=candidates.map((c,i)=>{
+    const isBest=c.diff===bestDiff&&i===0, isSel=i===savedIdx;
+    const cls=isSel?'sel':(isBest?'best':'');
+    const parts=intervals.map((iv,j)=>`${iv}×${c.Xs[j]}`).join('/');
+    const syncStr=`→${c.syncLen}cm`;
+    return `<span class="cross-chip ${cls}" onclick="selectCross(${i})">
+      ${parts} ${syncStr}${c.diff>0?' (오차'+c.diff+'cm)':''}
+    </span>`;
   }).join('');
+
+  const selC=candidates[savedIdx];
+  let crossDetail='';
+  if (selC) {
+    const lines=intervals.map((iv,j)=>`<strong style="color:var(--primary)">${iv}cm</strong>×${selC.Xs[j]}회 = ${iv*selC.Xs[j]}cm`).join(' &nbsp;|&nbsp; ');
+    crossDetail=`<div class="info-box info-blue" style="margin-top:10px;font-size:0.79rem">
+      ${lines}<br>
+      오차 <strong style="color:${selC.diff<=2?'var(--success)':'var(--warning)'}">${selC.diff}cm</strong>
+      &nbsp;→ 기준 길이 <strong style="color:var(--primary)">${selC.syncLen}cm</strong>
+      <span style="color:var(--muted)">(+칼밥${getN('kalbab')}cm = ${selC.syncLen+getN('kalbab')}cm)</span>
+    </div>`;
+  }
+
+  container.innerHTML=`
+    <div class="card">
+      <div class="card-title">📐 현재 폭 배치 &nbsp;<small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">원단 폭 ${fW}cm</small></div>
+      <table class="layout-table">
+        <thead><tr><th>조각</th><th>사이즈</th><th>방향</th><th>열수</th><th>사용폭</th><th>자르기 간격</th></tr></thead>
+        <tbody>${layoutRows}</tbody>
+      </table>
+      <div class="width-summary" style="margin-top:8px">
+        <span>총 사용: <strong>${usedW}cm</strong> / ${fW}cm</span>
+        <span class="${waste<=0?'width-over':waste<=3?'width-ok':'width-warn'}">${waste<0?`초과 ${-waste}cm ⚠️`:waste===0?'딱 맞음 ✅':`낭비 ${waste}cm${waste<=3?' ✅':''}`}</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔄 크로스컷 후보 &nbsp;<small style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">재단판 최대 ${bL}cm — 탭하여 선택</small></div>
+      <div class="hint" style="margin-bottom:8px">
+        ${intervals.map((iv,j)=>`간격 <strong style="color:${['#818cf8','#fbbf24','#34d399','#f87171'][j%4]}">${iv}cm</strong>`).join(' &nbsp;·&nbsp; ')} 의 배수를 맞추는 최적 조합
+      </div>
+      <div class="cross-grid">${crossChips||'<span style="color:var(--muted);font-size:0.8rem">후보 없음</span>'}</div>
+      ${crossDetail}
+    </div>`;
 }
 
-/* ─────────────────────────────────────────
-   최적 요척 탭 렌더링
-───────────────────────────────────────── */
+function selectCross(i) { saveJSON(LS.SEL_CROSS,i); renderAnalysis(); }
+
+/* ══════════════════════════════════════════
+   요척 계산 탭
+══════════════════════════════════════════ */
 function renderYossuk() {
-  const f = getFabric();
-  const usableLen = f.l - f.k;
-  const container = $id('yossuk-content');
+  const fW=getN('fabric-w'), tot=getN('fabric-total'), bL=getN('board-len'), kal=getN('kalbab');
+  const container=$id('yossuk-content');
+  if (!pieces.length||!fW||!tot||!bL) { container.innerHTML='<div class="empty">⚙️ 설정 탭에서 조각과 원단 값을 입력해주세요.</div>'; return; }
 
-  if (!items.length) {
-    container.innerHTML = '<div class="card"><div class="empty">⚙️ 설정 탭에서 원단과 재단 사이즈를 입력해주세요.</div></div>';
-    return;
-  }
+  const colTypes=getColumnTypes();
+  if (!colTypes.length) { container.innerHTML='<div class="empty">세운 열/눕힌 열을 1 이상 입력하세요.</div>'; return; }
 
-  container.innerHTML = items.map(item => {
-    const a   = analyzeItem(item, f.w, usableLen);
-    const opt = a.best === 'A' ? a.A : a.B;
-    const alt = a.best === 'A' ? a.B : a.A;
+  const usedW=colTypes.reduce((s,c)=>s+c.width*c.count,0);
+  if (usedW>fW) { container.innerHTML=`<div class="empty" style="color:var(--danger)">⚠️ 총 폭 ${usedW}cm > 원단 폭 ${fW}cm</div>`; return; }
 
-    // 난단 설명
-    let nanDanHtml = '';
-    if (opt.rem > 0) {
-      if (opt.remPieces > 0) {
-        nanDanHtml = `난단 <strong>${opt.rem}cm</strong> → 회전 배치(${opt.rowH === a.H ? a.W : a.H}cm 행) <strong>${opt.remRows}행 × ${opt.perRow === a.A.perRow ? a.B.perRow : a.A.perRow}장 = ${opt.remPieces}장</strong> 추가 재단 가능`;
-      } else {
-        nanDanHtml = `난단 <strong>${opt.rem}cm</strong> → 최소 필요 높이(${alt.rowH}cm)에 미달 — 추가 재단 불가`;
-      }
-    } else {
-      nanDanHtml = `난단 없음 — ${usableLen}cm가 ${opt.rowH}cm 행의 배수`;
-    }
+  const igGroups=getIntervalGroups(colTypes);
+  const intervals=igGroups.map(g=>g.interval);
+  const candidates=findCrossCutCandidates(intervals,bL);
+  if (!candidates.length) { container.innerHTML='<div class="empty">크로스컷 후보를 찾을 수 없습니다.</div>'; return; }
 
-    // 비교표 HTML
-    function ocHtml(o, isBest) {
-      return `
-        <div class="oc-item ${isBest ? 'best' : ''}">
-          <div class="oc-title">${o.label}${isBest ? '<span class="best-badge">최적</span>' : ''}</div>
-          <div class="oc-row"><span class="oc-key">행당 수량</span><span class="oc-val">${o.perRow}장</span></div>
-          <div class="oc-row"><span class="oc-key">폭 낭비</span><span class="oc-val">${o.wasteW}cm</span></div>
-          <div class="oc-row"><span class="oc-key">판수</span><span class="oc-val">${o.rows}판</span></div>
-          <div class="oc-row"><span class="oc-key">난단</span><span class="oc-val">${o.rem}cm</span></div>
-          <div class="oc-row"><span class="oc-key">+난단 추가</span><span class="oc-val">${o.remPieces}장</span></div>
-          <div class="oc-row"><span class="oc-key">총 생산</span><span class="oc-val" style="color:var(--success)">${o.totalAll}장</span></div>
-        </div>
-      `;
-    }
+  const selIdx=Math.min(loadJSON(LS.SEL_CROSS)??0, candidates.length-1);
+  const cross=candidates[selIdx];
+  const nubiOn=  $id('nubi-enabled').checked;
+  const nubiCnt= nubiOn ? getN('nubi-fabric')+getN('nubi-thread') : 0;
+  const r=calcAll(colTypes,igGroups,cross,tot,kal,nubiOn,nubiCnt);
 
+  // 크로스컷 요약 텍스트
+  const crossSum=intervals.map((iv,j)=>`${iv}cm×${cross.Xs[j]}=${iv*cross.Xs[j]}cm`).join(' / ');
+
+  // 판당 상세
+  const panDetail=pieces.map(p=>{
+    const cols=colTypes.filter(c=>c.pieceId===p.id);
+    const parts=cols.map(c=>`${c.count}열×${r.ixMap.get(c.cutInterval)||0}=${c.count*(r.ixMap.get(c.cutInterval)||0)}`);
+    return `<span style="color:${p.color};font-weight:700">${esc(p.name)}</span>: ${parts.join('+')} = ${r.pr[p.id].perPanel}장`;
+  }).join('<br>');
+
+  // 난단 상세
+  const remDetail=r.remnantLen===0?'난단 없음':pieces.map(p=>{
+    const cols=colTypes.filter(c=>c.pieceId===p.id);
+    const parts=cols.map(c=>`⌊${r.remnantLen}÷${c.cutInterval}⌋×${c.count}=${Math.floor(r.remnantLen/c.cutInterval)*c.count}`);
+    return `<span style="color:${p.color};font-weight:700">${esc(p.name)}</span>: ${parts.join('+')} = ${r.pr[p.id].remPcs}장`;
+  }).join('<br>');
+
+  // 조각별 결과 카드
+  const pieceCards=pieces.map(p=>{
+    const d=r.pr[p.id];
+    const cellCount = nubiOn ? 4 : 3;
     return `
-      <div class="yossuk-card" style="border-left-color:${item.color}">
-        <div class="card-title" style="color:${item.color}">■ ${esc(item.name)} &nbsp;${item.width}×${item.height}cm &nbsp;×${item.count}장</div>
-
-        <!-- 배치 비교 -->
-        <div class="orient-compare">
-          ${ocHtml(a.A, a.best === 'A')}
-          ${ocHtml(a.B, a.best === 'B')}
+      <div class="piece-result" style="border-left-color:${p.color}">
+        <div class="pr-header">
+          <div class="pr-name" style="color:${p.color}">${esc(p.name)} <small style="color:var(--muted);font-weight:400">${p.W}×${p.H}cm</small></div>
+          <div class="pr-total" style="color:${p.color}">${d.final}장</div>
         </div>
-
-        <!-- 최적 판수 -->
-        <div class="yossuk-best">
-          <div class="yb-label">최적 배치 요약</div>
-          <div class="yb-config">
-            <strong>${opt.perRow}장</strong> × <strong>${opt.rows}판</strong> = <strong>${opt.total}장</strong>
-            &nbsp;+&nbsp; 난단 <strong>${opt.remPieces}장</strong>
-            &nbsp;= 총 <strong>${opt.totalAll}장</strong> 생산
-          </div>
+        <div class="pr-cells" style="grid-template-columns:repeat(${cellCount},1fr)">
+          <div class="pr-cell"><div class="pr-val cv-blue">${r.numPanels*d.perPanel}</div><div class="pr-lbl">본판<br>(${r.numPanels}×${d.perPanel})</div></div>
+          <div class="pr-cell"><div class="pr-val cv-yellow">${d.remPcs}</div><div class="pr-lbl">난단</div></div>
+          ${nubiOn?`<div class="pr-cell"><div class="pr-val cv-red">-${d.loss}</div><div class="pr-lbl">누비로스</div></div>`:''}
+          <div class="pr-cell" style="border:1px solid rgba(129,140,248,0.2)"><div class="pr-val cv-green">${d.final}</div><div class="pr-lbl">최종</div></div>
         </div>
-
-        <!-- 난단 정보 -->
-        <div class="nan-dan">${nanDanHtml}</div>
-
-        <!-- 필요 원단 (목표 장수 기준) -->
-        <div class="yb-label" style="margin-bottom:8px">📦 ${item.count}장 생산에 필요한 최소 원단</div>
-        <div class="min-fabric">
-          <span class="mf-val">${a.fabricFor + f.k} cm &nbsp;<small style="font-size:1rem;color:var(--muted)">(${((a.fabricFor + f.k)/100).toFixed(2)}m)</small></span>
-          <span class="mf-sub">
-            ${a.rowsFor}행 × ${opt.rowH}cm + 칼밥 ${f.k}cm = ${a.fabricFor + f.k}cm<br>
-            → ${a.produced}장 생산 (${a.produced - a.needed}장 여분)
-          </span>
-        </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
+
+  // 누비 로스 섹션
+  const nubiSection=nubiOn?`
+    <div class="result-card">
+      <div class="step-label">🧶 5단계 — 누비 로스 차감</div>
+      <div class="info-box info-red">
+        원단 ${getN('nubi-fabric')}회 + 실 ${getN('nubi-thread')}회 = <strong>${nubiCnt}회 교체</strong><br>
+        ${pieces.map(p=>{
+          const cols=p.standCols+p.lyingCols;
+          const colNote=[p.standCols?p.standCols+'세운':'',p.lyingCols?p.lyingCols+'눕힘':''].filter(Boolean).join('+');
+          return `<span style="color:${p.color}">${esc(p.name)}</span>: ${nubiCnt}회×${cols}열(${colNote}) = <strong style="color:var(--danger)">-${nubiCnt*cols}장</strong>`;
+        }).join('<br>')}
+      </div>
+    </div>`:'';
+
+  container.innerHTML=`
+    <div class="result-card">
+      <div class="step-label">📋 계산 설정</div>
+      <div class="info-box info-blue">
+        <div class="formula-row"><span class="formula-key">원단 폭/총 길이</span><span class="formula-val">${fW}cm / ${tot}cm</span></div>
+        <div class="formula-row"><span class="formula-key">재단판 최대/칼밥</span><span class="formula-val">${bL}cm / ${kal}cm</span></div>
+        <div class="formula-row"><span class="formula-key">폭 사용</span><span class="formula-val">${usedW}cm (낭비 ${fW-usedW}cm)</span></div>
+        <div class="formula-row" style="border:none"><span class="formula-key">크로스컷</span><span class="formula-val" style="font-size:0.72rem">${crossSum}</span></div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="step-label">📏 1단계 — 원단판 길이</div>
+      <div class="info-box info-blue">
+        기준 ${cross.syncLen}cm + 칼밥 ${kal}cm = <strong style="color:var(--primary);font-size:1.05rem">${r.panelLen}cm</strong>
+        <span style="color:var(--muted)">(${(r.panelLen/100).toFixed(2)}m)</span>
+        &nbsp;· 오차 <strong style="color:${cross.diff<=2?'var(--success)':'var(--warning)'}">${cross.diff}cm</strong>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="step-label">🗂️ 2단계 — 판 수 & 난단</div>
+      <div class="num-grid-3">
+        <div class="num-item"><div class="num-val cv-green">${r.numPanels}</div><div class="num-lbl">완전판 수</div><div class="num-sub">${r.panelLen}cm×${r.numPanels}</div></div>
+        <div class="num-item"><div class="num-val cv-yellow">${r.remnantLen}</div><div class="num-lbl">난단(cm)</div></div>
+        <div class="num-item"><div class="num-val cv-blue">${tot}</div><div class="num-lbl">원단 총 길이(cm)</div></div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="step-label">✂️ 3단계 — 판당 장수</div>
+      <div class="info-box info-blue">${panDetail}</div>
+    </div>
+
+    <div class="result-card">
+      <div class="step-label">📦 4단계 — 난단 장수</div>
+      ${r.remnantLen===0
+        ?'<div class="info-box info-green">난단 없음 — 원단이 정확히 맞아 떨어집니다.</div>'
+        :`<div class="info-box info-yellow">${remDetail}</div>`}
+    </div>
+
+    ${nubiSection}
+
+    <div class="result-card">
+      <div class="step-label">📊 조각별 결과</div>
+      ${pieceCards}
+    </div>
+
+    <div class="result-card">
+      <div class="step-label">🏁 최종 합계</div>
+      <div class="info-box info-blue">
+        ${pieces.map(p=>{
+          const d=r.pr[p.id];
+          return `<div class="formula-row"><span class="formula-key" style="color:${p.color}">${esc(p.name)}</span>
+            <span class="formula-val">${r.numPanels*d.perPanel}+${d.remPcs}${nubiOn?`-${d.loss}`:''} = ${d.final}장</span></div>`;
+        }).join('')}
+        ${pieces.length>1?`<div class="formula-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:6px"><span class="formula-key" style="font-weight:700">전체 합계</span><span class="formula-val" style="color:var(--success);font-size:1rem">${r.grandFinal}장</span></div>`:''}
+      </div>
+      <div class="total-box">
+        <div class="total-val">${r.grandFinal}</div>
+        <div class="total-lbl">${pieces.length===1?pieces[0].name+' 최종 생산 수량':'전체 최종 수량 (장)'}</div>
+        ${pieces.length>1?`<div class="total-eq">${pieces.map(p=>`<span style="color:${p.color}">${esc(p.name)} ${r.pr[p.id].final}장</span>`).join(' · ')}</div>`:''}
+      </div>
+    </div>`;
 }
 
-/* ─────────────────────────────────────────
-   패킹 알고리즘 (시각화용)
-───────────────────────────────────────── */
-function packItems(bw, bh, trim) {
-  const usable = bh - trim;
-  const result = [];
-  let x = 0, rowY = 0, rowH = 0;
-  const expanded = [];
-  items.forEach(it => { for (let n = 0; n < it.count; n++) expanded.push(it); });
-  expanded.forEach(it => {
-    if (it.width > bw) { result.push({ it, overflow: true }); return; }
-    if (x + it.width > bw) { rowY += rowH; x = 0; rowH = 0; }
-    if (rowY + it.height > usable) { result.push({ it, overflow: true }); return; }
-    result.push({ it, x, y: trim + rowY, overflow: false });
-    rowH = Math.max(rowH, it.height);
-    x += it.width;
-  });
-  return result;
-}
-
-/* ─────────────────────────────────────────
-   캔버스 그리기
-───────────────────────────────────────── */
-function redraw() {
-  const canvas = $id('viz-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const f   = getFabric();
-  const bw  = f.w, bh = f.l, trim = f.k;
-
-  const dpr     = window.devicePixelRatio || 1;
-  const dispW   = canvas.clientWidth || 360;
-  const aspect  = bh / bw;
-  const dispH   = Math.min(dispW * aspect, 480);
-
-  canvas.width  = Math.round(dispW * dpr);
-  canvas.height = Math.round(dispH * dpr);
-  canvas.style.height = Math.round(dispH) + 'px';
-  ctx.scale(dpr, dpr);
-
-  const pad   = 14;
-  const scale = Math.min((dispW - pad*2) / bw, (dispH - pad*2) / bh);
-  const ox    = (dispW - bw * scale) / 2;
-  const oy    = (dispH - bh * scale) / 2;
-
-  ctx.clearRect(0, 0, dispW, dispH);
-
-  // 재단판 (검정)
-  ctx.fillStyle = '#111827'; ctx.strokeStyle = '#4b5563'; ctx.lineWidth = 1.5;
-  roundRect(ctx, ox, oy, bw * scale, bh * scale, 4, true, true);
-
-  // 칼밥 구역
-  if (trim > 0) {
-    const th = trim * scale;
-    ctx.save();
-    ctx.beginPath(); ctx.rect(ox, oy, bw * scale, th); ctx.clip();
-    ctx.fillStyle = 'rgba(251,191,36,0.10)'; ctx.fillRect(ox, oy, bw * scale, th);
-    ctx.strokeStyle = 'rgba(251,191,36,0.28)'; ctx.lineWidth = 1;
-    const step = 9;
-    for (let i = -bh * scale; i < bw * scale + th; i += step) {
-      ctx.beginPath(); ctx.moveTo(ox + i, oy); ctx.lineTo(ox + i + th, oy + th); ctx.stroke();
-    }
-    ctx.restore();
-    ctx.save(); ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
-    ctx.beginPath(); ctx.moveTo(ox, oy + th); ctx.lineTo(ox + bw * scale, oy + th); ctx.stroke();
-    ctx.setLineDash([]); ctx.restore();
-    const fs = clamp(Math.floor(th * 0.45), 9, 12);
-    ctx.fillStyle = '#fbbf24'; ctx.font = `bold ${fs}px sans-serif`;
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    if (th >= 13) ctx.fillText(`칼밥 ${trim}cm`, ox + bw * scale / 2, oy + th / 2);
-  }
-
-  // 패킹된 조각
-  const placements = packItems(bw, bh, trim);
-  placements.forEach(p => {
-    if (p.overflow) return;
-    const rx = ox + p.x * scale, ry = oy + p.y * scale;
-    const rw = p.it.width * scale, rh = p.it.height * scale;
-    ctx.fillStyle = p.it.color + '44'; ctx.fillRect(rx, ry, rw, rh);
-    ctx.strokeStyle = p.it.color; ctx.lineWidth = 1.5;
-    ctx.strokeRect(rx + 0.75, ry + 0.75, rw - 1.5, rh - 1.5);
-    if (rw > 24 && rh > 16) {
-      const fs = clamp(Math.floor(Math.min(rw, rh) * 0.22), 8, 11);
-      ctx.fillStyle = p.it.color; ctx.font = `bold ${fs}px sans-serif`;
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      if (rw > 38) ctx.fillText(`${p.it.width}×${p.it.height}`, rx + rw/2, ry + rh/2);
-    }
-  });
-
-  // 치수 표기
-  ctx.fillStyle = '#4b5563'; ctx.font = '10px sans-serif';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-  ctx.fillText(`${bw}cm`, ox + bw * scale / 2, oy + bh * scale + 4);
-  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-  ctx.fillText(`${bh}cm`, ox - 4, oy + bh * scale / 2);
-
-  // 범례
-  $id('legend').innerHTML = items.map(it => `
-    <div class="leg-item"><div class="leg-dot" style="background:${it.color}"></div>
-    <span>${esc(it.name)} ${it.width}×${it.height} ×${it.count}</span></div>
-  `).join('');
-
-  // 통계
-  const fit  = placements.filter(p => !p.overflow).length;
-  const over = placements.filter(p =>  p.overflow).length;
-  const usableArea = bw * Math.max(bh - trim, 0);
-  const usedArea   = placements.filter(p => !p.overflow).reduce((s, p) => s + p.it.width * p.it.height, 0);
-  const util = usableArea > 0 ? Math.round(usedArea / usableArea * 100) : 0;
-  $id('s-fit').textContent  = fit;
-  $id('s-over').textContent = over;
-  $id('s-util').textContent = util + '%';
-}
-
-/* ─────────────────────────────────────────
-   유틸
-───────────────────────────────────────── */
-function $id(id)        { return document.getElementById(id); }
-function setVal(id, v)  { const el = $id(id); if (el) el.value = v; }
-function esc(s)         { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function clamp(v,mn,mx) { return Math.max(mn, Math.min(mx, v)); }
-function loadJSON(k)    { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }
-function saveJSON(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
-
-function roundRect(ctx, x, y, w, h, r, fill, stroke) {
-  ctx.beginPath();
-  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
-  if (fill) ctx.fill(); if (stroke) ctx.stroke();
-}
-
-/* ─────────────────────────────────────────
+/* ══════════════════════════════════════════
    시작
-───────────────────────────────────────── */
+══════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', init);
-window.addEventListener('resize', () => { if ($id('tab-yossuk').classList.contains('active')) redraw(); });
 </script>
 </body>
 </html>
