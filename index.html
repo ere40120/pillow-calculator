@@ -1427,11 +1427,17 @@ function saveFirebaseConfig() {
   const raw = $id('firebase-config-input').value.trim();
   let cfg;
   try {
-    // firebaseConfig = {...} 형태도 허용
-    const json = raw.replace(/^[\s\S]*?(\{[\s\S]*\})[\s\S]*$/, '$1');
-    cfg = JSON.parse(json);
+    // { } 블록 추출
+    const block = raw.replace(/^[\s\S]*?(\{[\s\S]*\})[\s\S]*$/, '$1');
+    // JavaScript 객체 리터럴 → JSON 변환:
+    // 1) 키에 따옴표 추가: word: → "word":
+    // 2) 후행 쉼표 제거
+    const jsonStr = block
+      .replace(/([{,]\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g, '$1"$2":')
+      .replace(/,\s*([}\]])/g, '$1');
+    cfg = JSON.parse(jsonStr);
   } catch(e) {
-    alert('JSON 형식이 올바르지 않습니다.\n{ } 중괄호 안의 내용만 붙여넣어 주세요.'); return;
+    alert('설정을 인식하지 못했습니다.\nFirebase 콘솔의 firebaseConfig 객체 전체를 붙여넣어 주세요.'); return;
   }
   if (!cfg.apiKey || !cfg.projectId) { alert('apiKey와 projectId가 필요합니다.'); return; }
   saveJSON('jdFirebaseCfg', cfg);
