@@ -70,8 +70,10 @@
     .preset-chip:hover { border-color: var(--primary); color: var(--primary); }
     .preset-chip .p-del { font-size: 0.63rem; color: var(--border); margin-left: 2px; transition: color 0.12s; }
     .preset-chip:hover .p-del { color: var(--danger); }
-    .preset-chip .p-move { font-size: 0.6rem; color: var(--border); margin-left: 1px; line-height:1; transition: color 0.12s; }
-    .preset-chip:hover .p-move { color: var(--primary); }
+    .preset-chip .p-drag { font-size: 0.7rem; color: var(--border); margin-right:2px; cursor:grab; touch-action:none; }
+    .preset-chip:hover .p-drag { color: var(--primary); }
+    .chip-ghost { opacity: 0.35 !important; border: 1.5px dashed var(--primary) !important; }
+    .chip-chosen { box-shadow: 0 0 0 2px var(--primary); }
     .excel-row { display:flex; gap:8px; margin-top:10px; }
     .excel-row .btn-excel { flex:1; padding:8px; font-size:0.78rem; font-weight:700; border:1.5px solid var(--border); border-radius:9px; background:var(--card2); color:var(--muted); cursor:pointer; transition:all 0.15s; }
     .excel-row .btn-excel:hover { border-color:var(--success); color:var(--success); }
@@ -721,11 +723,10 @@ function renderFabricPresets() {
   const list=loadJSON(LS.FABRIC_PRE)||[];
   $id('fabric-preset-area').style.display=list.length?'block':'none';
   $id('fabric-preset-chips').innerHTML=list.map((p,i)=>`
-    <span class="preset-chip" onclick="loadFabricPreset(${i})">${esc(p.name)}
-      ${i>0?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.FABRIC_PRE,${i},-1,renderFabricPresets)">↑</span>`:''}
-      ${i<list.length-1?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.FABRIC_PRE,${i},1,renderFabricPresets)">↓</span>`:''}
+    <span class="preset-chip" onclick="loadFabricPreset(${i})"><span class="p-drag">⠿</span>${esc(p.name)}
       <span class="p-del" onclick="event.stopPropagation();delFabricPreset(${i})">✕</span>
     </span>`).join('');
+  initChipSortable('fabric-preset-chips', LS.FABRIC_PRE, renderFabricPresets);
 }
 function loadFabricPreset(i) {
   const p=(loadJSON(LS.FABRIC_PRE)||[])[i]; if(!p) return;
@@ -749,11 +750,10 @@ function renderSizePresets() {
   const list=loadJSON(LS.SIZE_FAVE)||[];
   $id('size-preset-area').style.display=list.length?'block':'none';
   $id('size-preset-chips').innerHTML=list.map((p,i)=>`
-    <span class="preset-chip" onclick="loadSizePreset(${i})">${esc(p.name)} <small style="color:var(--muted)">${p.W}×${p.H}</small>
-      ${i>0?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.SIZE_FAVE,${i},-1,renderSizePresets)">↑</span>`:''}
-      ${i<list.length-1?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.SIZE_FAVE,${i},1,renderSizePresets)">↓</span>`:''}
+    <span class="preset-chip" onclick="loadSizePreset(${i})"><span class="p-drag">⠿</span>${esc(p.name)} <small style="color:var(--muted)">${p.W}×${p.H}</small>
       <span class="p-del" onclick="event.stopPropagation();delSizePreset(${i})">✕</span>
     </span>`).join('');
+  initChipSortable('size-preset-chips', LS.SIZE_FAVE, renderSizePresets);
 }
 function loadSizePreset(i) {
   const p=(loadJSON(LS.SIZE_FAVE)||[])[i]; if(!p) return;
@@ -780,11 +780,10 @@ function renderPieceListPresets() {
   const area=$id('piece-list-preset-area');
   area.style.display=list.length?'block':'none';
   $id('piece-list-preset-chips').innerHTML=list.map((p,i)=>`
-    <span class="preset-chip" onclick="loadPieceListPreset(${i})">${esc(p.name)}
-      ${i>0?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.PIECE_LIST_PRE,${i},-1,renderPieceListPresets)">↑</span>`:''}
-      ${i<list.length-1?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.PIECE_LIST_PRE,${i},1,renderPieceListPresets)">↓</span>`:''}
+    <span class="preset-chip" onclick="loadPieceListPreset(${i})"><span class="p-drag">⠿</span>${esc(p.name)}
       <span class="p-del" onclick="event.stopPropagation();delPieceListPreset(${i})">✕</span>
     </span>`).join('');
+  initChipSortable('piece-list-preset-chips', LS.PIECE_LIST_PRE, renderPieceListPresets);
 }
 function loadPieceListPreset(i) {
   const s=(loadJSON(LS.PIECE_LIST_PRE)||[])[i]; if(!s) return;
@@ -815,11 +814,10 @@ function renderSetPresets() {
   const chips=$id('set-preset-chips');
   if (!list.length) { chips.innerHTML='<div class="empty" style="width:100%;padding:8px 0">저장된 세트가 없습니다</div>'; return; }
   chips.innerHTML=list.map((p,i)=>`
-    <span class="preset-chip" onclick="loadSetPreset(${i})">${esc(p.name)}
-      ${i>0?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.SET_PRE,${i},-1,renderSetPresets)">↑</span>`:''}
-      ${i<list.length-1?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.SET_PRE,${i},1,renderSetPresets)">↓</span>`:''}
+    <span class="preset-chip" onclick="loadSetPreset(${i})"><span class="p-drag">⠿</span>${esc(p.name)}
       <span class="p-del" onclick="event.stopPropagation();delSetPreset(${i})">✕</span>
     </span>`).join('');
+  initChipSortable('set-preset-chips', LS.SET_PRE, renderSetPresets);
 }
 function loadSetPreset(i) {
   const s=(loadJSON(LS.SET_PRE)||[])[i]; if(!s) return;
@@ -833,7 +831,30 @@ function delSetPreset(i) {
   const list=loadJSON(LS.SET_PRE)||[]; list.splice(i,1); saveJSON(LS.SET_PRE,list); renderSetPresets();
 }
 
-/* 즐겨찾기 순서 변경 */
+/* 즐겨찾기 드래그 정렬 */
+const _chipSortables = {};
+function initChipSortable(containerId, lsKey, renderFn) {
+  if (!window.Sortable) return;
+  const el = $id(containerId);
+  if (!el) return;
+  if (_chipSortables[containerId]) { try { _chipSortables[containerId].destroy(); } catch(e){} }
+  _chipSortables[containerId] = new Sortable(el, {
+    animation: 180,
+    ghostClass: 'chip-ghost',
+    chosenClass: 'chip-chosen',
+    handle: '.p-drag',
+    onEnd(evt) {
+      if (evt.oldIndex === evt.newIndex) return;
+      const list = loadJSON(lsKey) || [];
+      const [item] = list.splice(evt.oldIndex, 1);
+      list.splice(evt.newIndex, 0, item);
+      saveJSON(lsKey, list);
+      setTimeout(() => { renderFn(); scheduleSyncToCloud(); }, 30);
+    }
+  });
+}
+
+/* 즐겨찾기 순서 변경 (fallback) */
 function movePreset(lsKey, i, dir, renderFn) {
   const list=loadJSON(lsKey)||[];
   const j=i+dir;
@@ -1665,6 +1686,8 @@ persistPieces = function() { _origPersistPieces(); scheduleSyncToCloud(); };
 
 <!-- SheetJS (엑셀 처리) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- Sortable.js (드래그 정렬) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
