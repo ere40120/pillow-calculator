@@ -1558,11 +1558,12 @@ persistPieces = function() { _origPersistPieces(); scheduleSyncToCloud(); };
   if (!cfg||!cfg.apiKey) return;
   try {
     const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(cfg);
-    window.fbApp=app;
-    window.fbAuth=firebase.auth();
-    window.fbDb=firebase.firestore();
+    // window.* 가 아닌 let 변수 직접 설정 (함수들이 let 변수를 읽음)
+    fbApp  = app;
+    fbAuth = firebase.auth();
+    fbDb   = firebase.firestore();
     firebase.auth().onAuthStateChanged(function(user){
-      window.fbUser=user;
+      fbUser = user;
       if(typeof renderAuthBar==='function') renderAuthBar();
       if(user && typeof loadFromCloud==='function') loadFromCloud();
     });
