@@ -70,6 +70,11 @@
     .preset-chip:hover { border-color: var(--primary); color: var(--primary); }
     .preset-chip .p-del { font-size: 0.63rem; color: var(--border); margin-left: 2px; transition: color 0.12s; }
     .preset-chip:hover .p-del { color: var(--danger); }
+    .preset-chip .p-move { font-size: 0.6rem; color: var(--border); margin-left: 1px; line-height:1; transition: color 0.12s; }
+    .preset-chip:hover .p-move { color: var(--primary); }
+    .excel-row { display:flex; gap:8px; margin-top:10px; }
+    .excel-row .btn-excel { flex:1; padding:8px; font-size:0.78rem; font-weight:700; border:1.5px solid var(--border); border-radius:9px; background:var(--card2); color:var(--muted); cursor:pointer; transition:all 0.15s; }
+    .excel-row .btn-excel:hover { border-color:var(--success); color:var(--success); }
     .save-row { display: flex; gap: 8px; margin-top: 11px; }
     .save-row input { flex: 1; padding-right: 11px; }
 
@@ -430,6 +435,19 @@
     </div>
   </div>
 
+  <!-- 엑셀 내보내기/가져오기 -->
+  <div class="card">
+    <div class="card-title">📊 즐겨찾기 엑셀 관리</div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px">원단·사이즈·조각목록·세트 즐겨찾기를 엑셀 파일로 백업하거나 가져올 수 있습니다.</div>
+    <div class="excel-row">
+      <button class="btn-excel" onclick="downloadAllPresetsExcel()">⬇️ 엑셀 다운로드</button>
+      <label class="btn-excel" style="text-align:center;cursor:pointer">
+        ⬆️ 엑셀 업로드
+        <input type="file" accept=".xlsx,.xls" style="display:none" onchange="uploadPresetsExcel(this.files[0]);this.value=''">
+      </label>
+    </div>
+  </div>
+
   <footer>재단 계산기 v3.2</footer>
 </div>
 </div>
@@ -704,6 +722,8 @@ function renderFabricPresets() {
   $id('fabric-preset-area').style.display=list.length?'block':'none';
   $id('fabric-preset-chips').innerHTML=list.map((p,i)=>`
     <span class="preset-chip" onclick="loadFabricPreset(${i})">${esc(p.name)}
+      ${i>0?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.FABRIC_PRE,${i},-1,renderFabricPresets)">↑</span>`:''}
+      ${i<list.length-1?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.FABRIC_PRE,${i},1,renderFabricPresets)">↓</span>`:''}
       <span class="p-del" onclick="event.stopPropagation();delFabricPreset(${i})">✕</span>
     </span>`).join('');
 }
@@ -730,6 +750,8 @@ function renderSizePresets() {
   $id('size-preset-area').style.display=list.length?'block':'none';
   $id('size-preset-chips').innerHTML=list.map((p,i)=>`
     <span class="preset-chip" onclick="loadSizePreset(${i})">${esc(p.name)} <small style="color:var(--muted)">${p.W}×${p.H}</small>
+      ${i>0?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.SIZE_FAVE,${i},-1,renderSizePresets)">↑</span>`:''}
+      ${i<list.length-1?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.SIZE_FAVE,${i},1,renderSizePresets)">↓</span>`:''}
       <span class="p-del" onclick="event.stopPropagation();delSizePreset(${i})">✕</span>
     </span>`).join('');
 }
@@ -759,6 +781,8 @@ function renderPieceListPresets() {
   area.style.display=list.length?'block':'none';
   $id('piece-list-preset-chips').innerHTML=list.map((p,i)=>`
     <span class="preset-chip" onclick="loadPieceListPreset(${i})">${esc(p.name)}
+      ${i>0?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.PIECE_LIST_PRE,${i},-1,renderPieceListPresets)">↑</span>`:''}
+      ${i<list.length-1?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.PIECE_LIST_PRE,${i},1,renderPieceListPresets)">↓</span>`:''}
       <span class="p-del" onclick="event.stopPropagation();delPieceListPreset(${i})">✕</span>
     </span>`).join('');
 }
@@ -792,6 +816,8 @@ function renderSetPresets() {
   if (!list.length) { chips.innerHTML='<div class="empty" style="width:100%;padding:8px 0">저장된 세트가 없습니다</div>'; return; }
   chips.innerHTML=list.map((p,i)=>`
     <span class="preset-chip" onclick="loadSetPreset(${i})">${esc(p.name)}
+      ${i>0?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.SET_PRE,${i},-1,renderSetPresets)">↑</span>`:''}
+      ${i<list.length-1?`<span class="p-move" onclick="event.stopPropagation();movePreset(LS.SET_PRE,${i},1,renderSetPresets)">↓</span>`:''}
       <span class="p-del" onclick="event.stopPropagation();delSetPreset(${i})">✕</span>
     </span>`).join('');
 }
@@ -805,6 +831,96 @@ function loadSetPreset(i) {
 }
 function delSetPreset(i) {
   const list=loadJSON(LS.SET_PRE)||[]; list.splice(i,1); saveJSON(LS.SET_PRE,list); renderSetPresets();
+}
+
+/* 즐겨찾기 순서 변경 */
+function movePreset(lsKey, i, dir, renderFn) {
+  const list=loadJSON(lsKey)||[];
+  const j=i+dir;
+  if (j<0||j>=list.length) return;
+  [list[i],list[j]]=[list[j],list[i]];
+  saveJSON(lsKey,list);
+  renderFn();
+  scheduleSyncToCloud();
+}
+
+/* ══════════════════════════════════════════
+   엑셀 내보내기 / 가져오기
+══════════════════════════════════════════ */
+function downloadAllPresetsExcel() {
+  if (!window.XLSX) { alert('엑셀 라이브러리 로딩 중입니다. 잠시 후 다시 시도해주세요.'); return; }
+  const wb = XLSX.utils.book_new();
+
+  // 원단 프리셋
+  const fl=loadJSON(LS.FABRIC_PRE)||[];
+  const fd=[['이름','원단폭(cm)','총원단(m)','재단판(cm)','칼밥(cm)']];
+  fl.forEach(p=>fd.push([p.name,p.w,p.t,p.b,p.k]));
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(fd),'원단프리셋');
+
+  // 사이즈 즐겨찾기
+  const sl=loadJSON(LS.SIZE_FAVE)||[];
+  const sd=[['이름','W(cm)','H(cm)','세운열','눕힌열','색상']];
+  sl.forEach(p=>sd.push([p.name,p.W,p.H,p.stand??1,p.lie??0,p.color||'']));
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(sd),'사이즈즐겨찾기');
+
+  // 조각목록 즐겨찾기
+  const pl=loadJSON(LS.PIECE_LIST_PRE)||[];
+  const pd=[['이름','조각수','조각정보(JSON)']];
+  pl.forEach(p=>pd.push([p.name,p.pieces.length,JSON.stringify(p.pieces)]));
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(pd),'조각목록즐겨찾기');
+
+  // 세트 즐겨찾기
+  const stl=loadJSON(LS.SET_PRE)||[];
+  const std=[['이름','조각수','원단폭','총원단','재단판','칼밥','세트정보(JSON)']];
+  stl.forEach(p=>std.push([p.name,p.pieces?.length||0,p.fabric?.w||'',p.fabric?.t||'',p.fabric?.b||'',p.fabric?.k||'',JSON.stringify(p)]));
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(std),'세트즐겨찾기');
+
+  XLSX.writeFile(wb,'재단계산기_즐겨찾기.xlsx');
+}
+
+function uploadPresetsExcel(file) {
+  if (!file) return;
+  if (!window.XLSX) { alert('엑셀 라이브러리 로딩 중입니다. 잠시 후 다시 시도해주세요.'); return; }
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try {
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      let imported=0;
+
+      // 원단 프리셋
+      const fs=wb.Sheets['원단프리셋'];
+      if (fs) {
+        const rows=XLSX.utils.sheet_to_json(fs);
+        const list=rows.map(r=>({name:String(r['이름']||''),w:+r['원단폭(cm)']||0,t:+r['총원단(m)']||0,b:+r['재단판(cm)']||0,k:+r['칼밥(cm)']||0})).filter(p=>p.name);
+        if (list.length){saveJSON(LS.FABRIC_PRE,list);renderFabricPresets();imported++;}
+      }
+      // 사이즈 즐겨찾기
+      const ss=wb.Sheets['사이즈즐겨찾기'];
+      if (ss) {
+        const rows=XLSX.utils.sheet_to_json(ss);
+        const list=rows.map(r=>({name:String(r['이름']||''),W:+r['W(cm)']||0,H:+r['H(cm)']||0,stand:+r['세운열']||1,lie:+r['눕힌열']||0,color:String(r['색상']||COLORS[0])})).filter(p=>p.name&&p.W&&p.H);
+        if (list.length){saveJSON(LS.SIZE_FAVE,list);renderSizePresets();imported++;}
+      }
+      // 조각목록 즐겨찾기
+      const ps=wb.Sheets['조각목록즐겨찾기'];
+      if (ps) {
+        const rows=XLSX.utils.sheet_to_json(ps);
+        const list=rows.map(r=>{try{return{name:String(r['이름']||''),pieces:JSON.parse(r['조각정보(JSON)']||'[]')};}catch{return null;}}).filter(p=>p&&p.name);
+        if (list.length){saveJSON(LS.PIECE_LIST_PRE,list);renderPieceListPresets();imported++;}
+      }
+      // 세트 즐겨찾기
+      const sts=wb.Sheets['세트즐겨찾기'];
+      if (sts) {
+        const rows=XLSX.utils.sheet_to_json(sts);
+        const list=rows.map(r=>{try{return JSON.parse(r['세트정보(JSON)']||'null');}catch{return null;}}).filter(Boolean);
+        if (list.length){saveJSON(LS.SET_PRE,list);renderSetPresets();imported++;}
+      }
+
+      alert(imported?`가져오기 완료! (${imported}개 시트 적용)`:'가져올 데이터가 없습니다.\n엑셀 시트 이름을 확인해주세요.');
+      scheduleSyncToCloud();
+    } catch(err){ alert('파일을 읽는 중 오류가 발생했습니다.\n'+err.message); }
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 /* ══════════════════════════════════════════
@@ -1546,6 +1662,9 @@ persistFabric = function() { _origPersistFabric(); scheduleSyncToCloud(); };
 const _origPersistPieces = persistPieces;
 persistPieces = function() { _origPersistPieces(); scheduleSyncToCloud(); };
 </script>
+
+<!-- SheetJS (엑셀 처리) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
