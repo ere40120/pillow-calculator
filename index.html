@@ -571,7 +571,7 @@ function init() {
   const savedP = loadJSON(LS.PIECES);
   if (savedP && savedP.length) {
     pieces = savedP.map(p => ({
-      isBackPanel:false, bpBigH:0, bpSmallH:0, bpBigCols:0, bpSmallCols:0,
+      isBackPanel:false, bpBigH:0, bpSmallH:0, bpBigCols:0, bpSmallCols:0, bpRecommendedL:0,
       ...p
     }));
     nextId = Math.max(...pieces.map(p=>p.id))+1;
@@ -714,7 +714,7 @@ function updateBPSmallCols(id, val) {
   persistPieces(); renderWidthBar(); updateNubiUI();
 }
 
-/* 뒷지 균등 계산: 크로스컷 기준으로 큰판/작은판 열수 자동 배분 */
+/* 뒷지 균등 계산: 원단 폭 기준으로 열수 결정 → 재단판 길이 최적화 */
 function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
 
 function autoBalanceBP(id) {
@@ -722,88 +722,104 @@ function autoBalanceBP(id) {
   if (!p||!p.isBackPanel) return;
   const fW  = getN('fabric-w');
   const bL  = getN('board-len');
-  if (!fW || !bL) { alert('원단 폭과 재단판 최대 길이를 먼저 입력해주세요.'); return; }
-
-  // 현재 선택된 크로스컷 기준, 없으면 기본 BL로 탐색
-  const colTypes = getColumnTypes();
-  const igGroups = getIntervalGroups(colTypes.filter(c=>!c.isBP));
-  const intervals = igGroups.map(g=>g.interval);
-  let syncLen = bL; // 기본값: 재단판 최대 길이 사용
-  if (intervals.length > 0) {
-    const candidates = findCrossCutCandidates(intervals, bL);
-    const selIdx = Math.min(loadJSON(LS.SEL_CROSS)??0, Math.max(0,candidates.length-1));
-    if (candidates[selIdx]) syncLen = candidates[selIdx].syncLen;
-  }
-
+  const W   = p.W;
   const bigH   = p.bpBigH;
   const smallH = p.bpSmallH;
-  const rBig   = Math.floor(syncLen / bigH);
-  const rSmall = Math.floor(syncLen / smallH);
 
-  if (rBig === 0 || rSmall === 0) {
-    alert(`재단판 길이(${syncLen}cm)가 너무 짧습니다.\n큰판(${bigH}cm) 또는 작은판(${smallH}cm)이 들어가지 않습니다.`);
-    return;
+  if (!fW || !bL || !W || !bigH || !smallH) {
+    alert('원단 폭, 재단판 최대 길이를 먼저 입력해주세요.'); return;
   }
 
-  // 균등 비율: C_big : C_small = rSmall : rBig (약분)
-  const g = gcd(rBig, rSmall);
-  const minBig   = rSmall / g;  // 최소 큰판 열 수
-  const minSmall = rBig   / g;  // 최소 작은판 열 수
-
-  // 현재 조각(p)을 제외한 기존 열이 사용하는 폭
-  const otherW = colTypes
+  // 이 뒷지 외 다른 조각이 사용하는 폭 계산
+  const otherW = getColumnTypes()
     .filter(c => c.pieceId !== id)
     .reduce((s, c) => s + c.width * c.count, 0);
-  const avail  = fW - otherW;  // 뒷지에 쓸 수 있는 폭
+  const availW    = fW - otherW;
+  const totalCols = Math.floor(availW / W);
 
-  // 최대 배수 k 계산 (폭에 맞게)
-  const unitW = (minBig + minSmall) * p.W;
-  if (unitW <= 0 || avail <= 0) {
-    alert('폭이 부족합니다. 원단 폭과 다른 조각 배치를 확인해주세요.'); return;
-  }
-  const k = Math.floor(avail / unitW);
-  if (k === 0) {
-    alert(`최소 배치(큰판 ${minBig}열 + 작은판 ${minSmall}열 = ${unitW}cm)가 가용 폭(${avail}cm)을 초과합니다.`);
+  if (totalCols < 2) {
+    alert(`원단 가용 폭(${availW}cm)에 ${W}cm 폭 열이 ${totalCols}개밖에 안 들어갑니다.\n최소 2열(큰판 1 + 작은판 1) 필요합니다.`);
     return;
   }
 
-  p.bpBigCols   = minBig   * k;
-  p.bpSmallCols = minSmall * k;
+  // ── 핵심 알고리즘 ──────────────────────────────────────
+  // 원단 폭 기준으로 총 열수(totalCols)가 결정됨
+  // 각 열수 배분(cBig, cSmall)과 재단판 길이(L)를 탐색하여
+  // 큰판/작은판 장수가 가장 균등한 조합 찾기
+  const results = [];
+  const minL = Math.max(bigH, smallH);
+
+  for (let cBig = 1; cBig < totalCols; cBig++) {
+    const cSmall = totalCols - cBig;
+    // L을 1씩 증가하며 장수 변화 감지 (정수 경계에서만 변함 → 최적화)
+    // L이 bigH 또는 smallH의 배수가 될 때만 장수가 바뀌므로 경계값만 체크
+    const checkPoints = new Set([minL]);
+    for (let m = 1; m * bigH <= bL; m++)   checkPoints.add(m * bigH);
+    for (let m = 1; m * smallH <= bL; m++) checkPoints.add(m * smallH);
+
+    for (const L of checkPoints) {
+      if (L < minL || L > bL) continue;
+      const rBig   = Math.floor(L / bigH);
+      const rSmall = Math.floor(L / smallH);
+      if (rBig === 0 || rSmall === 0) continue;
+      const bigCnt   = cBig   * rBig;
+      const smallCnt = cSmall * rSmall;
+      const diff     = Math.abs(bigCnt - smallCnt);
+      results.push({ cBig, cSmall, L, rBig, rSmall, bigCnt, smallCnt, diff, total: bigCnt + smallCnt });
+    }
+  }
+
+  if (!results.length) {
+    alert('조합을 찾을 수 없습니다. 재단판 최대 길이를 늘려보세요.'); return;
+  }
+
+  // diff 오름차순, total 내림차순, L 오름차순으로 정렬
+  results.sort((a, b) => a.diff - b.diff || b.total - a.total || a.L - b.L);
+
+  // 중복 제거: 동일 (cBig, cSmall, diff) 중 첫 번째만
+  const seen = new Set();
+  const top = results.filter(r => {
+    const key = `${r.cBig},${r.cSmall},${r.diff}`;
+    if (seen.has(key)) return false;
+    seen.add(key); return true;
+  }).slice(0, 5);
+
+  // 최적 적용
+  const best = top[0];
+  p.bpBigCols   = best.cBig;
+  p.bpSmallCols = best.cSmall;
+  // 뒷지 전용 권장 재단판 길이 저장
+  p.bpRecommendedL = best.L;
 
   persistPieces();
   renderPiecesList();
   renderWidthBar();
 
-  const totalBig   = p.bpBigCols   * rBig;
-  const totalSmall = p.bpSmallCols * rSmall;
-  const info = `✅ 균등 계산 완료\n큰판 ${p.bpBigCols}열 × ${rBig}장 = ${totalBig}장\n작은판 ${p.bpSmallCols}열 × ${rSmall}장 = ${totalSmall}장\n(재단판 기준 길이: ${syncLen}cm)`;
-  alert(info);
+  const lines = top.map((r, i) =>
+    `${i===0?'★':' '} 큰판 ${r.cBig}열 + 작은판 ${r.cSmall}열 | 재단판 ${r.L}cm\n   큰판 ${r.bigCnt}장 / 작은판 ${r.smallCnt}장 (차이 ${r.diff}장)`
+  ).join('\n');
+
+  alert(
+    `✅ 균등 배치 계산 완료\n원단 폭 ${availW}cm → 총 ${totalCols}열 (${W}cm × ${totalCols})\n\n` +
+    `상위 조합 (★이 적용됨):\n${lines}\n\n` +
+    `💡 재단판 길이를 ${best.L}cm로 설정하면 가장 균등합니다.`
+  );
 }
 
-/* 뒷지 균형 배지 */
+/* 뒷지 균형 배지: 권장 재단판 길이(bpRecommendedL) 기준으로 장수 비교 */
 function bpBalanceBadge(p) {
-  if (!p.bpBigCols && !p.bpSmallCols) return '';
-  const bL = getN('board-len');
-  if (!bL) return '';
-  // 현재 크로스컷 기준으로 장수 비교
-  const colTypes = getColumnTypes();
-  const igGroups = getIntervalGroups(colTypes.filter(c=>!c.isBP));
-  const intervals = igGroups.map(g=>g.interval);
-  let syncLen = bL;
-  if (intervals.length > 0) {
-    const candidates = findCrossCutCandidates(intervals, bL);
-    const selIdx = Math.min(loadJSON(LS.SEL_CROSS)??0, Math.max(0,candidates.length-1));
-    if (candidates[selIdx]) syncLen = candidates[selIdx].syncLen;
-  }
-  const rBig   = Math.floor(syncLen / p.bpBigH);
-  const rSmall = Math.floor(syncLen / p.bpSmallH);
+  if (!p.bpBigCols && !p.bpSmallCols) return '<span style="font-size:0.68rem;color:var(--muted)">⚖️ 균등 계산 버튼으로 자동 설정</span>';
+  const L = p.bpRecommendedL || getN('board-len');
+  if (!L) return '';
+  const rBig   = Math.floor(L / p.bpBigH);
+  const rSmall = Math.floor(L / p.bpSmallH);
   const totalBig   = p.bpBigCols   * rBig;
   const totalSmall = p.bpSmallCols * rSmall;
-  if (totalBig === totalSmall) {
-    return `<span class="bp-balance-ok">✅ 균등 (${totalBig}장)</span>`;
+  const diff = Math.abs(totalBig - totalSmall);
+  if (diff === 0) {
+    return `<span class="bp-balance-ok">✅ 균등 (${totalBig}장, 재단판${L}cm)</span>`;
   } else {
-    const diff = Math.abs(totalBig - totalSmall);
-    return `<span class="bp-balance-warn">⚠️ 큰판 ${totalBig} / 작은판 ${totalSmall} (차이 ${diff})</span>`;
+    return `<span class="bp-balance-warn">⚠️ 큰판 ${totalBig} / 작은판 ${totalSmall} (차이 ${diff}장, 재단판${L}cm)</span>`;
   }
 }
 
@@ -1284,7 +1300,7 @@ function runAutoAnalysis() {
   const availW = fW - bpUsedW;
   const normalPieces = pieces.filter(p => !p.isBackPanel);
   if (!normalPieces.length && pieces.some(p=>p.isBackPanel)) {
-    alert('뒷지 조각만 있습니다.\n뒷지는 수동 모드에서 큰판/작은판 열수를 설정하거나 ⚖️ 균등 계산을 사용하세요.');
+    alert('일반 조각이 없습니다.\n뒷지 조각은 조각 목록의 ⚖️ 균등 계산 버튼을 사용해서\n원단 폭 기준으로 열수와 재단판 길이를 자동 계산할 수 있습니다.');
     return;
   }
   autoCombos = findWidthCombos(normalPieces, availW);
@@ -1426,6 +1442,11 @@ function calcAll(colTypes, igGroups, cross, totalLen, kalbab, nubiEnabled, nubiC
   // interval → X 매핑
   const ixMap=new Map();
   igGroups.forEach((g,i)=>ixMap.set(g.interval,cross.Xs[i]));
+  // 뒷지 조각: bpRecommendedL 기준으로 별도 X값 추가 (메인 크로스컷에 없는 경우)
+  pieces.filter(p=>p.isBackPanel&&p.bpRecommendedL>0).forEach(p=>{
+    if (!ixMap.has(p.bpBigH))   ixMap.set(p.bpBigH,   Math.floor(p.bpRecommendedL/p.bpBigH));
+    if (!ixMap.has(p.bpSmallH)) ixMap.set(p.bpSmallH, Math.floor(p.bpRecommendedL/p.bpSmallH));
+  });
 
   const panelLen  = cross.syncLen+kalbab;
   const numPanels = Math.floor(totalLen/panelLen);
