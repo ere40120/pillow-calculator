@@ -194,6 +194,17 @@
     .combo-badge-best { background: rgba(52,211,153,0.18);  color: var(--success); border: 1px solid rgba(52,211,153,0.35); }
     .combo-applied { display: inline-flex; align-items: center; gap: 4px; font-size: 0.68rem; color: var(--success); font-weight: 700; margin-top: 6px; }
 
+    /* 뒷지 재단 */
+    .bp-badge { font-size: 0.6rem; background: rgba(251,191,36,0.15); color: var(--warning); padding: 2px 7px; border-radius: 5px; font-weight: 700; margin-left: 5px; vertical-align: middle; }
+    .bp-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .bp-col-group { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .bp-col-lbl { font-size: 0.6rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+    .bp-balance-ok   { color: var(--success); font-size: 0.68rem; font-weight: 700; }
+    .bp-balance-warn { color: var(--warning); font-size: 0.68rem; font-weight: 700; }
+    .bp-balance-bad  { color: var(--danger);  font-size: 0.68rem; font-weight: 700; }
+    .bp-auto-btn { padding: 4px 9px; background: rgba(251,191,36,0.1); border: 1.5px solid rgba(251,191,36,0.3); border-radius: 7px; font-size: 0.68rem; font-weight: 700; color: var(--warning); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .bp-auto-btn:hover { background: rgba(251,191,36,0.2); border-color: var(--warning); }
+
     /* Google 로그인 / 동기화 */
     .auth-bar { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:7px 14px 0; }
     .auth-btn { display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; font-size:0.76rem; font-weight:700; cursor:pointer; border:none; transition:all 0.15s; letter-spacing:-0.2px; }
@@ -352,9 +363,36 @@
         <label>W (cm)</label>
         <div class="input-wrap"><input type="number" id="new-w" placeholder="46" min="1"></div>
       </div>
-      <div class="field" style="margin-bottom:0">
+      <div class="field" style="margin-bottom:0" id="form-h-wrap">
         <label>H (cm)</label>
         <div class="input-wrap"><input type="number" id="new-h" placeholder="67" min="1"></div>
+      </div>
+    </div>
+    <!-- 뒷지 모드 토글 -->
+    <div class="check-row" style="margin-bottom:8px">
+      <input type="checkbox" id="new-is-backpanel" onchange="toggleBackPanelForm()">
+      <label for="new-is-backpanel">🛏️ 뒷지 재단 <small style="color:var(--muted);font-weight:400">(큰판+작은판 균등 재단)</small></label>
+    </div>
+    <!-- 뒷지: 큰판/작은판 H 입력 -->
+    <div id="form-bp-row" class="grid-2" style="display:none;margin-bottom:9px">
+      <div class="field" style="margin-bottom:0">
+        <label>큰판 H (cm)</label>
+        <div class="input-wrap"><input type="number" id="new-bp-big-h" placeholder="45" min="1"></div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>작은판 H (cm)</label>
+        <div class="input-wrap"><input type="number" id="new-bp-small-h" placeholder="35" min="1"></div>
+      </div>
+    </div>
+    <!-- 뒷지: 열 수 (수동 모드일 때) -->
+    <div id="form-bp-cols-row" class="grid-2" style="display:none;margin-bottom:9px">
+      <div class="field" style="margin-bottom:0">
+        <label>큰판 열</label>
+        <div class="input-wrap"><input type="number" id="new-bp-big-cols" value="1" min="0"></div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>작은판 열</label>
+        <div class="input-wrap"><input type="number" id="new-bp-small-cols" value="1" min="0"></div>
       </div>
     </div>
     <div id="form-cols-row" class="grid-2" style="margin-bottom:9px;display:none">
@@ -532,7 +570,10 @@ function init() {
   // 조각 복원
   const savedP = loadJSON(LS.PIECES);
   if (savedP && savedP.length) {
-    pieces = savedP;
+    pieces = savedP.map(p => ({
+      isBackPanel:false, bpBigH:0, bpSmallH:0, bpBigCols:0, bpSmallCols:0,
+      ...p
+    }));
     nextId = Math.max(...pieces.map(p=>p.id))+1;
   }
 
@@ -586,21 +627,60 @@ function setColor(c) {
 ══════════════════════════════════════════ */
 function addPiece() {
   const name  = $id('new-name').value.trim() || ('조각'+(nextId));
-  const W     = getN('new-w'), H = getN('new-h');
-  if (!W||!H) { alert('W와 H를 입력해주세요.'); return; }
-  let stand = 0, lie = 0;
-  if (layoutMode === 'manual') {
-    stand = Math.max(0, parseInt($id('new-stand').value)||0);
-    lie   = Math.max(0, parseInt($id('new-lie').value)||0);
+  const W     = getN('new-w');
+  const isBP  = $id('new-is-backpanel').checked;
+
+  if (!W) { alert('W를 입력해주세요.'); return; }
+
+  if (isBP) {
+    // 뒷지 재단 모드
+    const bigH   = getN('new-bp-big-h');
+    const smallH = getN('new-bp-small-h');
+    if (!bigH || !smallH) { alert('큰판 H와 작은판 H를 입력해주세요.'); return; }
+    if (bigH <= smallH) { alert('큰판 H가 작은판 H보다 커야 합니다.'); return; }
+    let bigCols = 0, smallCols = 0;
+    if (layoutMode === 'manual') {
+      bigCols   = Math.max(0, parseInt($id('new-bp-big-cols').value)||0);
+      smallCols = Math.max(0, parseInt($id('new-bp-small-cols').value)||0);
+    }
+    pieces.push({
+      id:nextId++, name, W, H:bigH,
+      standCols:0, lyingCols:0, color:selColor, lossPerChange:1,
+      isBackPanel:true, bpBigH:bigH, bpSmallH:smallH,
+      bpBigCols:bigCols, bpSmallCols:smallCols
+    });
+    $id('new-bp-big-h').value=''; $id('new-bp-small-h').value='';
+    $id('new-bp-big-cols').value='1'; $id('new-bp-small-cols').value='1';
+  } else {
+    const H = getN('new-h');
+    if (!H) { alert('H를 입력해주세요.'); return; }
+    let stand = 0, lie = 0;
+    if (layoutMode === 'manual') {
+      stand = Math.max(0, parseInt($id('new-stand').value)||0);
+      lie   = Math.max(0, parseInt($id('new-lie').value)||0);
+    }
+    pieces.push({
+      id:nextId++, name, W, H, standCols:stand, lyingCols:lie,
+      color:selColor, lossPerChange:1,
+      isBackPanel:false, bpBigH:0, bpSmallH:0, bpBigCols:0, bpSmallCols:0
+    });
+    $id('new-h').value='';
+    $id('new-stand').value='1'; $id('new-lie').value='0';
   }
-  pieces.push({id:nextId++, name, W, H, standCols:stand, lyingCols:lie, color:selColor, lossPerChange:1});
+
   persistPieces();
-  // 자동 모드면 분석 결과 초기화
   if (layoutMode === 'auto') { autoCombos=[]; selComboIdx=-1; $id('auto-combo-results').innerHTML=''; }
   renderPiecesList();
-  $id('new-name').value=''; $id('new-w').value=''; $id('new-h').value='';
-  $id('new-stand').value='1'; $id('new-lie').value='0';
+  $id('new-name').value=''; $id('new-w').value='';
   setColor(COLORS[(COLORS.indexOf(selColor)+1)%COLORS.length]);
+}
+
+function toggleBackPanelForm() {
+  const on = $id('new-is-backpanel').checked;
+  $id('form-h-wrap').style.display   = on ? 'none' : '';
+  $id('form-bp-row').style.display   = on ? '' : 'none';
+  const showManualCols = on && layoutMode === 'manual';
+  $id('form-bp-cols-row').style.display = showManualCols ? '' : 'none';
 }
 
 function removePiece(id) {
@@ -622,6 +702,111 @@ function updateLie(id,val) {
 }
 // updateLoss 제거됨 — 누비 로스는 열수 기준 자동 계산
 
+/* 뒷지 열수 업데이트 */
+function updateBPBigCols(id, val) {
+  const p=pieces.find(p=>p.id===id); if(!p||!p.isBackPanel) return;
+  p.bpBigCols=Math.max(0,parseInt(val)||0);
+  persistPieces(); renderWidthBar(); updateNubiUI();
+}
+function updateBPSmallCols(id, val) {
+  const p=pieces.find(p=>p.id===id); if(!p||!p.isBackPanel) return;
+  p.bpSmallCols=Math.max(0,parseInt(val)||0);
+  persistPieces(); renderWidthBar(); updateNubiUI();
+}
+
+/* 뒷지 균등 계산: 크로스컷 기준으로 큰판/작은판 열수 자동 배분 */
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+
+function autoBalanceBP(id) {
+  const p = pieces.find(p=>p.id===id);
+  if (!p||!p.isBackPanel) return;
+  const fW  = getN('fabric-w');
+  const bL  = getN('board-len');
+  if (!fW || !bL) { alert('원단 폭과 재단판 최대 길이를 먼저 입력해주세요.'); return; }
+
+  // 현재 선택된 크로스컷 기준, 없으면 기본 BL로 탐색
+  const colTypes = getColumnTypes();
+  const igGroups = getIntervalGroups(colTypes.filter(c=>!c.isBP));
+  const intervals = igGroups.map(g=>g.interval);
+  let syncLen = bL; // 기본값: 재단판 최대 길이 사용
+  if (intervals.length > 0) {
+    const candidates = findCrossCutCandidates(intervals, bL);
+    const selIdx = Math.min(loadJSON(LS.SEL_CROSS)??0, Math.max(0,candidates.length-1));
+    if (candidates[selIdx]) syncLen = candidates[selIdx].syncLen;
+  }
+
+  const bigH   = p.bpBigH;
+  const smallH = p.bpSmallH;
+  const rBig   = Math.floor(syncLen / bigH);
+  const rSmall = Math.floor(syncLen / smallH);
+
+  if (rBig === 0 || rSmall === 0) {
+    alert(`재단판 길이(${syncLen}cm)가 너무 짧습니다.\n큰판(${bigH}cm) 또는 작은판(${smallH}cm)이 들어가지 않습니다.`);
+    return;
+  }
+
+  // 균등 비율: C_big : C_small = rSmall : rBig (약분)
+  const g = gcd(rBig, rSmall);
+  const minBig   = rSmall / g;  // 최소 큰판 열 수
+  const minSmall = rBig   / g;  // 최소 작은판 열 수
+
+  // 현재 조각(p)을 제외한 기존 열이 사용하는 폭
+  const otherW = colTypes
+    .filter(c => c.pieceId !== id)
+    .reduce((s, c) => s + c.width * c.count, 0);
+  const avail  = fW - otherW;  // 뒷지에 쓸 수 있는 폭
+
+  // 최대 배수 k 계산 (폭에 맞게)
+  const unitW = (minBig + minSmall) * p.W;
+  if (unitW <= 0 || avail <= 0) {
+    alert('폭이 부족합니다. 원단 폭과 다른 조각 배치를 확인해주세요.'); return;
+  }
+  const k = Math.floor(avail / unitW);
+  if (k === 0) {
+    alert(`최소 배치(큰판 ${minBig}열 + 작은판 ${minSmall}열 = ${unitW}cm)가 가용 폭(${avail}cm)을 초과합니다.`);
+    return;
+  }
+
+  p.bpBigCols   = minBig   * k;
+  p.bpSmallCols = minSmall * k;
+
+  persistPieces();
+  renderPiecesList();
+  renderWidthBar();
+
+  const totalBig   = p.bpBigCols   * rBig;
+  const totalSmall = p.bpSmallCols * rSmall;
+  const info = `✅ 균등 계산 완료\n큰판 ${p.bpBigCols}열 × ${rBig}장 = ${totalBig}장\n작은판 ${p.bpSmallCols}열 × ${rSmall}장 = ${totalSmall}장\n(재단판 기준 길이: ${syncLen}cm)`;
+  alert(info);
+}
+
+/* 뒷지 균형 배지 */
+function bpBalanceBadge(p) {
+  if (!p.bpBigCols && !p.bpSmallCols) return '';
+  const bL = getN('board-len');
+  if (!bL) return '';
+  // 현재 크로스컷 기준으로 장수 비교
+  const colTypes = getColumnTypes();
+  const igGroups = getIntervalGroups(colTypes.filter(c=>!c.isBP));
+  const intervals = igGroups.map(g=>g.interval);
+  let syncLen = bL;
+  if (intervals.length > 0) {
+    const candidates = findCrossCutCandidates(intervals, bL);
+    const selIdx = Math.min(loadJSON(LS.SEL_CROSS)??0, Math.max(0,candidates.length-1));
+    if (candidates[selIdx]) syncLen = candidates[selIdx].syncLen;
+  }
+  const rBig   = Math.floor(syncLen / p.bpBigH);
+  const rSmall = Math.floor(syncLen / p.bpSmallH);
+  const totalBig   = p.bpBigCols   * rBig;
+  const totalSmall = p.bpSmallCols * rSmall;
+  if (totalBig === totalSmall) {
+    return `<span class="bp-balance-ok">✅ 균등 (${totalBig}장)</span>`;
+  } else {
+    const diff = Math.abs(totalBig - totalSmall);
+    return `<span class="bp-balance-warn">⚠️ 큰판 ${totalBig} / 작은판 ${totalSmall} (차이 ${diff})</span>`;
+  }
+}
+
 function renderPiecesList() {
   const list = $id('pieces-list');
   if (!pieces.length) {
@@ -630,28 +815,67 @@ function renderPiecesList() {
     updateNubiUI(); return;
   }
   const showCols = (layoutMode === 'manual');
-  list.innerHTML = pieces.map(p=>`
-    <div class="piece-row">
-      <div class="piece-swatch" style="background:${p.color}"></div>
-      <div class="piece-info">
-        <div class="piece-name-lbl">${esc(p.name)}</div>
-        <div class="piece-size-lbl">${p.W}×${p.H}cm${showCols&&(p.standCols||p.lyingCols)?` <span style="color:var(--muted);font-size:0.68rem">${p.standCols?p.standCols+'세':''}${p.lyingCols?p.lyingCols+'눕':''}</span>`:''}</div>
-      </div>
-      ${showCols?`
-      <div class="piece-cols">
-        <div class="col-group">
-          <div class="col-lbl">세움</div>
-          <input class="col-inp" type="number" value="${p.standCols}" min="0"
-            oninput="updateStand(${p.id},this.value)">
-        </div>
-        <div class="col-group">
-          <div class="col-lbl">눕힘</div>
-          <input class="col-inp" type="number" value="${p.lyingCols}" min="0"
-            oninput="updateLie(${p.id},this.value)">
-        </div>
-      </div>`:''}
-      <button class="piece-del" onclick="removePiece(${p.id})">×</button>
-    </div>`).join('');
+
+  list.innerHTML = pieces.map(p => {
+    if (p.isBackPanel) {
+      // 뒷지 재단 카드
+      const bigCount   = p.bpBigCols;
+      const smallCount = p.bpSmallCols;
+      const balanceHtml = bpBalanceBadge(p);
+      const colsHtml = showCols ? `
+        <div class="bp-row" style="margin-top:7px;padding-top:7px;border-top:1px dashed rgba(251,191,36,0.25)">
+          <div class="bp-col-group">
+            <div class="bp-col-lbl">큰판 열</div>
+            <input class="col-inp" type="number" value="${p.bpBigCols}" min="0"
+              oninput="updateBPBigCols(${p.id},this.value)" style="width:46px">
+          </div>
+          <div class="bp-col-group">
+            <div class="bp-col-lbl">작은판 열</div>
+            <input class="col-inp" type="number" value="${p.bpSmallCols}" min="0"
+              oninput="updateBPSmallCols(${p.id},this.value)" style="width:46px">
+          </div>
+          <button class="bp-auto-btn" onclick="autoBalanceBP(${p.id})">⚖️ 균등 계산</button>
+          ${balanceHtml}
+        </div>` : (bigCount||smallCount ? `<div style="font-size:0.68rem;color:var(--muted);margin-top:3px">큰판 ${bigCount}열 · 작은판 ${smallCount}열 ${balanceHtml}</div>` : '');
+      return `
+        <div class="piece-row" style="flex-direction:column;align-items:stretch">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="piece-swatch" style="background:${p.color}"></div>
+            <div class="piece-info" style="flex:1">
+              <div class="piece-name-lbl">${esc(p.name)}<span class="bp-badge">🛏️ 뒷지</span></div>
+              <div class="piece-size-lbl">W ${p.W}cm &nbsp;|&nbsp; 큰판 ${p.bpBigH}cm · 작은판 ${p.bpSmallH}cm</div>
+            </div>
+            <button class="piece-del" onclick="removePiece(${p.id})">×</button>
+          </div>
+          ${colsHtml}
+        </div>`;
+    } else {
+      // 일반 재단 카드
+      return `
+        <div class="piece-row">
+          <div class="piece-swatch" style="background:${p.color}"></div>
+          <div class="piece-info">
+            <div class="piece-name-lbl">${esc(p.name)}</div>
+            <div class="piece-size-lbl">${p.W}×${p.H}cm${showCols&&(p.standCols||p.lyingCols)?` <span style="color:var(--muted);font-size:0.68rem">${p.standCols?p.standCols+'세':''}${p.lyingCols?p.lyingCols+'눕':''}</span>`:''}</div>
+          </div>
+          ${showCols?`
+          <div class="piece-cols">
+            <div class="col-group">
+              <div class="col-lbl">세움</div>
+              <input class="col-inp" type="number" value="${p.standCols}" min="0"
+                oninput="updateStand(${p.id},this.value)">
+            </div>
+            <div class="col-group">
+              <div class="col-lbl">눕힘</div>
+              <input class="col-inp" type="number" value="${p.lyingCols}" min="0"
+                oninput="updateLie(${p.id},this.value)">
+            </div>
+          </div>`:''}
+          <button class="piece-del" onclick="removePiece(${p.id})">×</button>
+        </div>`;
+    }
+  }).join('');
+
   renderWidthBar();
   updateNubiUI();
 }
@@ -691,21 +915,39 @@ function updateNubiUI() {
   if (!pieces.length) { rows.innerHTML='<div class="hint">조각을 먼저 추가해주세요.</div>'; return; }
   const total=getN('nubi-fabric')+getN('nubi-thread');
   rows.innerHTML=pieces.map(p=>{
-    const cols=p.standCols+p.lyingCols;
-    const loss=total*cols;
-    const colNote=cols>0
-      ? `(${[p.standCols?p.standCols+'세운':'',p.lyingCols?p.lyingCols+'눕힘':''].filter(Boolean).join('+')})`
-      : '<span style="color:var(--danger)">열수 미설정</span>';
-    return `<div class="nubi-piece-row">
-      <div>
-        <div class="nubi-piece-name" style="color:${p.color}">${esc(p.name)}</div>
-        <div class="nubi-piece-sz">${p.W}×${p.H}cm &nbsp;${colNote}</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:0.88rem;font-weight:800;color:var(--danger)">-${loss}장</div>
-        <div style="font-size:0.65rem;color:var(--muted)">${total}회×${cols}열</div>
-      </div>
-    </div>`;
+    if (p.isBackPanel) {
+      const cols = p.bpBigCols + p.bpSmallCols;
+      const loss = total * cols;
+      const colNote = cols > 0
+        ? `(큰판 ${p.bpBigCols}열 + 작은판 ${p.bpSmallCols}열)`
+        : '<span style="color:var(--danger)">열수 미설정</span>';
+      return `<div class="nubi-piece-row">
+        <div>
+          <div class="nubi-piece-name" style="color:${p.color}">${esc(p.name)} <span class="bp-badge">🛏️</span></div>
+          <div class="nubi-piece-sz">W ${p.W}cm · 큰판 ${p.bpBigH}cm · 작은판 ${p.bpSmallH}cm &nbsp;${colNote}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.88rem;font-weight:800;color:var(--danger)">-${loss}장</div>
+          <div style="font-size:0.65rem;color:var(--muted)">${total}회×${cols}열</div>
+        </div>
+      </div>`;
+    } else {
+      const cols=p.standCols+p.lyingCols;
+      const loss=total*cols;
+      const colNote=cols>0
+        ? `(${[p.standCols?p.standCols+'세운':'',p.lyingCols?p.lyingCols+'눕힘':''].filter(Boolean).join('+')})`
+        : '<span style="color:var(--danger)">열수 미설정</span>';
+      return `<div class="nubi-piece-row">
+        <div>
+          <div class="nubi-piece-name" style="color:${p.color}">${esc(p.name)}</div>
+          <div class="nubi-piece-sz">${p.W}×${p.H}cm &nbsp;${colNote}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.88rem;font-weight:800;color:var(--danger)">-${loss}장</div>
+          <div style="font-size:0.65rem;color:var(--muted)">${total}회×${cols}열</div>
+        </div>
+      </div>`;
+    }
   }).join('');
 }
 
@@ -739,11 +981,22 @@ function delFabricPreset(i) {
 
 // 단일 사이즈 즐겨찾기
 function quickSaveSize() {
-  const W=getN('new-w'), H=getN('new-h');
-  if (!W||!H) { alert('W, H를 입력하세요.'); return; }
-  const name=$id('new-name').value.trim()||`${W}×${H}`;
+  const W=getN('new-w');
+  const isBP = $id('new-is-backpanel').checked;
+  if (!W) { alert('W를 입력하세요.'); return; }
   const list=loadJSON(LS.SIZE_FAVE)||[];
-  list.push({name,W,H,stand:parseInt($id('new-stand').value)||1,lie:parseInt($id('new-lie').value)||0,color:selColor});
+  if (isBP) {
+    const bigH=getN('new-bp-big-h'), smallH=getN('new-bp-small-h');
+    if (!bigH||!smallH) { alert('큰판 H와 작은판 H를 입력하세요.'); return; }
+    const name=$id('new-name').value.trim()||`뒷지 ${W}×${bigH}/${smallH}`;
+    list.push({name,W,H:bigH,stand:0,lie:0,color:selColor,
+               isBackPanel:true,bpBigH:bigH,bpSmallH:smallH,bpBigCols:getN('new-bp-big-cols')||1,bpSmallCols:getN('new-bp-small-cols')||1});
+  } else {
+    const H=getN('new-h');
+    if (!H) { alert('H를 입력하세요.'); return; }
+    const name=$id('new-name').value.trim()||`${W}×${H}`;
+    list.push({name,W,H,stand:parseInt($id('new-stand').value)||1,lie:parseInt($id('new-lie').value)||0,color:selColor,isBackPanel:false});
+  }
   saveJSON(LS.SIZE_FAVE,list); renderSizePresets();
 }
 function renderSizePresets() {
@@ -757,8 +1010,20 @@ function renderSizePresets() {
 }
 function loadSizePreset(i) {
   const p=(loadJSON(LS.SIZE_FAVE)||[])[i]; if(!p) return;
-  setV('new-name',p.name); setV('new-w',p.W); setV('new-h',p.H);
-  setV('new-stand',p.stand??1); setV('new-lie',p.lie??0);
+  setV('new-name',p.name); setV('new-w',p.W);
+  if (p.isBackPanel) {
+    $id('new-is-backpanel').checked = true;
+    toggleBackPanelForm();
+    setV('new-bp-big-h', p.bpBigH||p.H||'');
+    setV('new-bp-small-h', p.bpSmallH||'');
+    setV('new-bp-big-cols', p.bpBigCols||1);
+    setV('new-bp-small-cols', p.bpSmallCols||1);
+  } else {
+    $id('new-is-backpanel').checked = false;
+    toggleBackPanelForm();
+    setV('new-h', p.H);
+    setV('new-stand',p.stand??1); setV('new-lie',p.lie??0);
+  }
   if (p.color) setColor(p.color);
 }
 function delSizePreset(i) {
@@ -968,6 +1233,8 @@ function applyModeUI() {
     : '💡 세운열: W폭 배치 → 길이방향 H간격 &nbsp;|&nbsp; 눕힌열: H폭 배치 → 길이방향 W간격';
   // auto 분석 영역
   $id('auto-combo-area').style.display = isAuto ? 'block' : 'none';
+  // 뒷지 폼: 수동 모드에서만 열수 입력 표시
+  toggleBackPanelForm();
 }
 
 /* ══════════════════════════════════════════
@@ -1011,7 +1278,16 @@ function runAutoAnalysis() {
   const fW = getN('fabric-w');
   if (!fW) { alert('원단 폭을 먼저 입력해주세요.'); return; }
   if (!pieces.length) { alert('조각을 먼저 추가해주세요.'); return; }
-  autoCombos = findWidthCombos(pieces, fW);
+  // 뒷지 조각이 사용하는 폭을 제외한 가용 폭으로 일반 조각 분석
+  const bpUsedW = pieces.filter(p=>p.isBackPanel)
+    .reduce((s,p) => s + (p.bpBigCols + p.bpSmallCols) * p.W, 0);
+  const availW = fW - bpUsedW;
+  const normalPieces = pieces.filter(p => !p.isBackPanel);
+  if (!normalPieces.length && pieces.some(p=>p.isBackPanel)) {
+    alert('뒷지 조각만 있습니다.\n뒷지는 수동 모드에서 큰판/작은판 열수를 설정하거나 ⚖️ 균등 계산을 사용하세요.');
+    return;
+  }
+  autoCombos = findWidthCombos(normalPieces, availW);
   selComboIdx = autoCombos.length ? 0 : -1;
   if (!autoCombos.length) {
     $id('auto-combo-results').innerHTML = '<div class="hint" style="color:var(--danger)">⚠️ 원단 폭에 맞는 배치 조합이 없습니다. 원단 폭을 확인해주세요.</div>';
@@ -1075,12 +1351,20 @@ function applyAutoCombo(idx) {
    핵심 알고리즘
 ══════════════════════════════════════════ */
 
-/** 열 타입 배열: [{pieceId,pieceName,W,H,orient,count,width,cutInterval,color}] */
+/** 열 타입 배열: [{pieceId,pieceName,W,H,orient,count,width,cutInterval,color,isBP,bpSub}] */
 function getColumnTypes() {
   const cols=[];
   pieces.forEach(p=>{
-    if (p.standCols>0) cols.push({pieceId:p.id,pieceName:p.name,W:p.W,H:p.H,orient:'stand',count:p.standCols,width:p.W,cutInterval:p.H,color:p.color});
-    if (p.lyingCols>0) cols.push({pieceId:p.id,pieceName:p.name,W:p.W,H:p.H,orient:'lie',  count:p.lyingCols,width:p.H,cutInterval:p.W,color:p.color});
+    if (p.isBackPanel) {
+      // 뒷지: 큰판 열 + 작은판 열 (모두 세움 기준)
+      if (p.bpBigCols>0)
+        cols.push({pieceId:p.id,pieceName:p.name+'(큰판)',W:p.W,H:p.bpBigH,orient:'stand',count:p.bpBigCols,width:p.W,cutInterval:p.bpBigH,color:p.color,isBP:true,bpSub:'big'});
+      if (p.bpSmallCols>0)
+        cols.push({pieceId:p.id,pieceName:p.name+'(작은판)',W:p.W,H:p.bpSmallH,orient:'stand',count:p.bpSmallCols,width:p.W,cutInterval:p.bpSmallH,color:p.color,isBP:true,bpSub:'small'});
+    } else {
+      if (p.standCols>0) cols.push({pieceId:p.id,pieceName:p.name,W:p.W,H:p.H,orient:'stand',count:p.standCols,width:p.W,cutInterval:p.H,color:p.color,isBP:false});
+      if (p.lyingCols>0) cols.push({pieceId:p.id,pieceName:p.name,W:p.W,H:p.H,orient:'lie',  count:p.lyingCols,width:p.H,cutInterval:p.W,color:p.color,isBP:false});
+    }
   });
   return cols;
 }
@@ -1149,20 +1433,57 @@ function calcAll(colTypes, igGroups, cross, totalLen, kalbab, nubiEnabled, nubiC
 
   // 조각별 계산
   const pr={};
-  pieces.forEach(p=>{ pr[p.id]={perPanel:0,remPcs:0,loss:0,subtotal:0,final:0}; });
+  pieces.forEach(p=>{
+    if (p.isBackPanel) {
+      pr[p.id]={perPanel:0,remPcs:0,loss:0,subtotal:0,final:0,
+                bpBigPerPanel:0,bpBigRem:0,bpSmallPerPanel:0,bpSmallRem:0,
+                bpBigFinal:0,bpSmallFinal:0,isBP:true};
+    } else {
+      pr[p.id]={perPanel:0,remPcs:0,loss:0,subtotal:0,final:0,isBP:false};
+    }
+  });
 
   colTypes.forEach(c=>{
     const X=ixMap.get(c.cutInterval)||0;
-    pr[c.pieceId].perPanel += c.count*X;
-    pr[c.pieceId].remPcs   += Math.floor(remnantLen/c.cutInterval)*c.count;
+    const remX = Math.floor(remnantLen/c.cutInterval)*c.count;
+    if (c.isBP) {
+      if (c.bpSub==='big') {
+        pr[c.pieceId].bpBigPerPanel += c.count*X;
+        pr[c.pieceId].bpBigRem      += remX;
+      } else {
+        pr[c.pieceId].bpSmallPerPanel += c.count*X;
+        pr[c.pieceId].bpSmallRem      += remX;
+      }
+    } else {
+      pr[c.pieceId].perPanel += c.count*X;
+      pr[c.pieceId].remPcs   += remX;
+    }
   });
 
   pieces.forEach(p=>{
-    // 누비 로스: 교체 횟수 × 해당 조각의 총 열수 (세운+눕힌)
-    const cols = p.standCols + p.lyingCols;
-    pr[p.id].loss     = nubiEnabled ? nubiChanges * cols : 0;
-    pr[p.id].subtotal = numPanels*pr[p.id].perPanel + pr[p.id].remPcs;
-    pr[p.id].final    = pr[p.id].subtotal - pr[p.id].loss;
+    if (p.isBackPanel) {
+      // 뒷지: 누비 로스는 총 열수(큰판열+작은판열) 기준
+      const cols = p.bpBigCols + p.bpSmallCols;
+      const loss = nubiEnabled ? nubiChanges * cols : 0;
+      const bigSub   = numPanels * pr[p.id].bpBigPerPanel   + pr[p.id].bpBigRem;
+      const smallSub = numPanels * pr[p.id].bpSmallPerPanel + pr[p.id].bpSmallRem;
+      // 균등 차감: 큰판:작은판 비율 유지하여 loss 배분
+      const total = bigSub + smallSub;
+      const bigLoss   = total>0 ? Math.round(loss * bigSub   / total) : 0;
+      const smallLoss = loss - bigLoss;
+      pr[p.id].bpBigFinal   = bigSub   - bigLoss;
+      pr[p.id].bpSmallFinal = smallSub - smallLoss;
+      pr[p.id].loss     = loss;
+      pr[p.id].subtotal = bigSub + smallSub;
+      pr[p.id].final    = pr[p.id].bpBigFinal + pr[p.id].bpSmallFinal;
+      pr[p.id].perPanel = pr[p.id].bpBigPerPanel + pr[p.id].bpSmallPerPanel;
+      pr[p.id].remPcs   = pr[p.id].bpBigRem + pr[p.id].bpSmallRem;
+    } else {
+      const cols = p.standCols + p.lyingCols;
+      pr[p.id].loss     = nubiEnabled ? nubiChanges * cols : 0;
+      pr[p.id].subtotal = numPanels*pr[p.id].perPanel + pr[p.id].remPcs;
+      pr[p.id].final    = pr[p.id].subtotal - pr[p.id].loss;
+    }
   });
 
   return {
@@ -1445,20 +1766,58 @@ function renderYossuk() {
   // 조각별 결과 카드
   const pieceCards=pieces.map(p=>{
     const d=r.pr[p.id];
-    const cellCount = nubiOn ? 4 : 3;
-    return `
-      <div class="piece-result" style="border-left-color:${p.color}">
-        <div class="pr-header">
-          <div class="pr-name" style="color:${p.color}">${esc(p.name)} <small style="color:var(--muted);font-weight:400">${p.W}×${p.H}cm</small></div>
-          <div class="pr-total" style="color:${p.color}">${d.final}장</div>
-        </div>
-        <div class="pr-cells" style="grid-template-columns:repeat(${cellCount},1fr)">
-          <div class="pr-cell"><div class="pr-val cv-blue">${r.numPanels*d.perPanel}</div><div class="pr-lbl">본판<br>(${r.numPanels}×${d.perPanel})</div></div>
-          <div class="pr-cell"><div class="pr-val cv-yellow">${d.remPcs}</div><div class="pr-lbl">난단</div></div>
-          ${nubiOn?`<div class="pr-cell"><div class="pr-val cv-red">-${d.loss}</div><div class="pr-lbl">누비로스</div></div>`:''}
-          <div class="pr-cell" style="border:1px solid rgba(129,140,248,0.2)"><div class="pr-val cv-green">${d.final}</div><div class="pr-lbl">최종</div></div>
-        </div>
-      </div>`;
+    if (p.isBackPanel) {
+      // 뒷지 전용 카드
+      const bigFinal   = d.bpBigFinal;
+      const smallFinal = d.bpSmallFinal;
+      const isBalanced = bigFinal === smallFinal;
+      const balanceStr = isBalanced
+        ? `<span style="color:var(--success);font-weight:700">✅ 균등 (${bigFinal}장)</span>`
+        : `<span style="color:var(--warning);font-weight:700">⚠️ 큰판 ${bigFinal}장 / 작은판 ${smallFinal}장 (차이 ${Math.abs(bigFinal-smallFinal)}장)</span>`;
+      return `
+        <div class="piece-result" style="border-left-color:${p.color}">
+          <div class="pr-header">
+            <div class="pr-name" style="color:${p.color}">${esc(p.name)} <span class="bp-badge">🛏️ 뒷지</span>
+              <small style="color:var(--muted);font-weight:400;display:block;margin-top:2px">W ${p.W}cm · 큰판 ${p.bpBigH}cm · 작은판 ${p.bpSmallH}cm</small></div>
+            <div class="pr-total" style="color:${p.color}">${d.final}장</div>
+          </div>
+          <div style="margin-bottom:8px;font-size:0.76rem">${balanceStr}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+            <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:8px;padding:8px;text-align:center">
+              <div style="font-size:0.63rem;color:var(--warning);font-weight:700;margin-bottom:4px">큰판 (${p.bpBigH}cm × ${p.bpBigCols}열)</div>
+              <div style="font-size:0.75rem;color:var(--muted)">본판 ${r.numPanels*d.bpBigPerPanel} + 난단 ${d.bpBigRem}</div>
+              <div style="font-size:1.1rem;font-weight:800;color:var(--warning);margin-top:2px">${bigFinal}장</div>
+            </div>
+            <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:8px;padding:8px;text-align:center">
+              <div style="font-size:0.63rem;color:var(--warning);font-weight:700;margin-bottom:4px">작은판 (${p.bpSmallH}cm × ${p.bpSmallCols}열)</div>
+              <div style="font-size:0.75rem;color:var(--muted)">본판 ${r.numPanels*d.bpSmallPerPanel} + 난단 ${d.bpSmallRem}</div>
+              <div style="font-size:1.1rem;font-weight:800;color:var(--warning);margin-top:2px">${smallFinal}장</div>
+            </div>
+          </div>
+          <div class="pr-cells" style="grid-template-columns:repeat(${nubiOn?4:3},1fr)">
+            <div class="pr-cell"><div class="pr-val cv-blue">${r.numPanels*d.perPanel}</div><div class="pr-lbl">본판 합계<br>(${r.numPanels}×${d.perPanel})</div></div>
+            <div class="pr-cell"><div class="pr-val cv-yellow">${d.remPcs}</div><div class="pr-lbl">난단 합계</div></div>
+            ${nubiOn?`<div class="pr-cell"><div class="pr-val cv-red">-${d.loss}</div><div class="pr-lbl">누비로스</div></div>`:''}
+            <div class="pr-cell" style="border:1px solid rgba(129,140,248,0.2)"><div class="pr-val cv-green">${d.final}</div><div class="pr-lbl">최종 합계</div></div>
+          </div>
+        </div>`;
+    } else {
+      // 일반 조각 카드
+      const cellCount = nubiOn ? 4 : 3;
+      return `
+        <div class="piece-result" style="border-left-color:${p.color}">
+          <div class="pr-header">
+            <div class="pr-name" style="color:${p.color}">${esc(p.name)} <small style="color:var(--muted);font-weight:400">${p.W}×${p.H}cm</small></div>
+            <div class="pr-total" style="color:${p.color}">${d.final}장</div>
+          </div>
+          <div class="pr-cells" style="grid-template-columns:repeat(${cellCount},1fr)">
+            <div class="pr-cell"><div class="pr-val cv-blue">${r.numPanels*d.perPanel}</div><div class="pr-lbl">본판<br>(${r.numPanels}×${d.perPanel})</div></div>
+            <div class="pr-cell"><div class="pr-val cv-yellow">${d.remPcs}</div><div class="pr-lbl">난단</div></div>
+            ${nubiOn?`<div class="pr-cell"><div class="pr-val cv-red">-${d.loss}</div><div class="pr-lbl">누비로스</div></div>`:''}
+            <div class="pr-cell" style="border:1px solid rgba(129,140,248,0.2)"><div class="pr-val cv-green">${d.final}</div><div class="pr-lbl">최종</div></div>
+          </div>
+        </div>`;
+    }
   }).join('');
 
   // 누비 로스 섹션
@@ -1468,9 +1827,15 @@ function renderYossuk() {
       <div class="info-box info-red">
         원단 ${getN('nubi-fabric')}회 + 실 ${getN('nubi-thread')}회 = <strong>${nubiCnt}회 교체</strong><br>
         ${pieces.map(p=>{
-          const cols=p.standCols+p.lyingCols;
-          const colNote=[p.standCols?p.standCols+'세운':'',p.lyingCols?p.lyingCols+'눕힘':''].filter(Boolean).join('+');
-          return `<span style="color:${p.color}">${esc(p.name)}</span>: ${nubiCnt}회×${cols}열(${colNote}) = <strong style="color:var(--danger)">-${nubiCnt*cols}장</strong>`;
+          if (p.isBackPanel) {
+            const cols = p.bpBigCols + p.bpSmallCols;
+            const colNote = `큰판 ${p.bpBigCols}열+작은판 ${p.bpSmallCols}열`;
+            return `<span style="color:${p.color}">${esc(p.name)}</span> 🛏️: ${nubiCnt}회×${cols}열(${colNote}) = <strong style="color:var(--danger)">-${nubiCnt*cols}장</strong>`;
+          } else {
+            const cols=p.standCols+p.lyingCols;
+            const colNote=[p.standCols?p.standCols+'세운':'',p.lyingCols?p.lyingCols+'눕힘':''].filter(Boolean).join('+');
+            return `<span style="color:${p.color}">${esc(p.name)}</span>: ${nubiCnt}회×${cols}열(${colNote}) = <strong style="color:var(--danger)">-${nubiCnt*cols}장</strong>`;
+          }
         }).join('<br>')}
       </div>
     </div>`:'';
@@ -1552,11 +1917,8 @@ window.addEventListener('DOMContentLoaded', init);
 let fbApp=null, fbAuth=null, fbDb=null, fbUser=null, syncTimer=null;
 
 function googleLogin() {
-  const cfg = loadJSON('jdFirebaseCfg');
-  if (!cfg || !cfg.apiKey) {
-    $id('firebase-modal').style.display='flex';
-    return;
-  }
+  const defaultCfg = {"apiKey":"AIzaSyAzs2mLq01Kqul0Bg6lFh6TbS2Hifx7F7c","authDomain":"pillow-49c2b.firebaseapp.com","projectId":"pillow-49c2b","storageBucket":"pillow-49c2b.firebasestorage.app","messagingSenderId":"6870129753","appId":"1:6870129753:web:f4a22035a67b13e6a3a548","measurementId":"G-KZNGRVXHNN"};
+  const cfg = loadJSON('jdFirebaseCfg') || defaultCfg;
   initFirebase(cfg);
 }
 
@@ -1696,7 +2058,9 @@ persistPieces = function() { _origPersistPieces(); scheduleSyncToCloud(); };
 <script>
 // 이미 저장된 Firebase 설정이 있으면 자동 초기화
 (function(){
-  const cfg=JSON.parse(localStorage.getItem('jdFirebaseCfg')||'null');
+  // 하드코딩된 기본 설정 (어느 브라우저에서도 동작)
+  const defaultCfg = {"apiKey":"AIzaSyAzs2mLq01Kqul0Bg6lFh6TbS2Hifx7F7c","authDomain":"pillow-49c2b.firebaseapp.com","projectId":"pillow-49c2b","storageBucket":"pillow-49c2b.firebasestorage.app","messagingSenderId":"6870129753","appId":"1:6870129753:web:f4a22035a67b13e6a3a548","measurementId":"G-KZNGRVXHNN"};
+  const cfg=JSON.parse(localStorage.getItem('jdFirebaseCfg')||'null') || defaultCfg;
   if (!cfg||!cfg.apiKey) return;
   try {
     const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(cfg);
